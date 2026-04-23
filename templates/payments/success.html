@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Payment Successful | {{ SITE_NAME }}{% endblock title %}
+
+{% block content %}
+<section class="content-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="photo-stack mb-3">
+          <div class="photo-frame photo-frame--accent" aria-hidden="true"></div>
+          <div class="photo-frame photo-frame--warm" aria-hidden="true"></div>
+        </div>
+        <p class="photo-note text-center mb-4">Celebrate your newest member stories here</p>
+        <div class="membership-card p-4 text-center">
+          <div class="display-3 text-success mb-3"><i class="fa-solid fa-circle-check"></i></div>
+          <h2 class="fw-semibold">Payment confirmed</h2>
+          <p class="mb-4">Thank you! Your membership for the <strong>{{ payment.plan.name }}</strong> plan is now active.</p>
+          <a class="btn btn-primary" href="{%url 'memberships:my_memberships' %}">Go to My Memberships</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

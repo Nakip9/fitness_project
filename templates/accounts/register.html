@@ -1,0 +1,394 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Join | {{ SITE_NAME }}{% endblock title %}
+
+{% block content %}
+<section class="content-section">
+  <div class="container">
+    <div class="row g-5 align-items-center justify-content-center">
+      <!-- Left Side - Visual Content -->
+      <div class="col-lg-6">
+        <div class="registration-visual">
+          <!-- Main Hero Image -->
+          <div class="main-visual mb-4">
+            <img src="{% static 'img/2_img.jpg' %}" alt="Join our fitness community" class="rounded-3">
+            <div class="visual-overlay">
+              <h3 class="text-white fw-bold">Start Your Fitness Journey Today</h3>
+            </div>
+          </div>
+
+          <!-- Benefits Grid -->
+          <div class="benefits-grid">
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="benefit-card text-center p-3">
+                  <div class="benefit-icon bg-primary rounded-3 p-3 mb-2 mx-auto">
+                    <i class="fas fa-dumbbell text-white"></i>
+                  </div>
+                  <h6 class="fw-bold mb-1">Premium Equipment</h6>
+                  <p class="small text-muted mb-0">Latest fitness technology</p>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="benefit-card text-center p-3">
+                  <div class="benefit-icon bg-success rounded-3 p-3 mb-2 mx-auto">
+                    <i class="fas fa-users text-white"></i>
+                  </div>
+                  <h6 class="fw-bold mb-1">Expert Trainers</h6>
+                  <p class="small text-muted mb-0">Certified professionals</p>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="benefit-card text-center p-3">
+                  <div class="benefit-icon bg-warning rounded-3 p-3 mb-2 mx-auto">
+                    <i class="fas fa-clock text-white"></i>
+                  </div>
+                  <h6 class="fw-bold mb-1">24/7 Access</h6>
+                  <p class="small text-muted mb-0">Fit your schedule</p>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="benefit-card text-center p-3">
+                  <div class="benefit-icon bg-info rounded-3 p-3 mb-2 mx-auto">
+                    <i class="fas fa-heart text-white"></i>
+                  </div>
+                  <h6 class="fw-bold mb-1">Community</h6>
+                  <p class="small text-muted mb-0">Supportive environment</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Testimonial Preview -->
+          <div class="testimonial-preview mt-4">
+            <div class="card-modern p-3">
+              <div class="d-flex align-items-center">
+              <img src="{% static 'img/sarah_girl_2.jpg' %}" alt="Sarah" class="rounded-circle me-3" style="width: 80px; height: 80px;">
+                <div>
+                  <p class="fw-bold mb-1">"Best decision I ever made!"</p>
+                  <div class="text-warning small">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side - Registration Form -->
+      <div class="col-lg-6">
+        <div class="registration-card">
+          <div class="card-header text-center mb-4">
+            <div class="registration-icon bg-gradient rounded-3 p-3 d-inline-flex mb-3">
+              <i class="fas fa-user-plus fa-2x text-white"></i>
+            </div>
+            <h2 class="fw-bold mb-2">Join {{ SITE_NAME }}</h2>
+            <p class="text-muted">Start your transformation today</p>
+          </div>
+
+          <form method="post" novalidate class="needs-validation">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                {% for error in form.non_field_errors %}
+                  {{ error }}
+                {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endif %}
+
+            <div class="row g-3">
+              {% for field in form %}
+                <div class="col-{% if field.name == 'first_name' or field.name == 'last_name' %}6{% else %}12{% endif %}">
+                  <div class="form-group">
+                    <label for="{{ field.id_for_label }}" class="form-label fw-semibold">
+                      {% if field.name == 'username' %}
+                        <i class="fas fa-user me-1 text-primary"></i>
+                      {% elif field.name == 'email' %}
+                        <i class="fas fa-envelope me-1 text-primary"></i>
+                      {% elif field.name == 'password1' or field.name == 'password2' %}
+                        <i class="fas fa-lock me-1 text-primary"></i>
+                      {% elif field.name == 'first_name' or field.name == 'last_name' %}
+                        <i class="fas fa-id-card me-1 text-primary"></i>
+                      {% endif %}
+                      {{ field.label }}
+                    </label>
+                    
+                    <div class="input-group">
+                      {{ field }}
+                      {% if field.name == 'password1' or field.name == 'password2' %}
+                        <span class="input-group-text toggle-password" style="cursor: pointer;">
+                          <i class="fas fa-eye"></i>
+                        </span>
+                      {% endif %}
+                    </div>
+                    
+                    {% if field.help_text %}
+                      <div class="form-text">{{ field.help_text }}</div>
+                    {% endif %}
+                    
+                    {% for error in field.errors %}
+                      <div class="invalid-feedback d-block">
+                        <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+
+            <!-- Terms Agreement -->
+            <div class="form-check mt-3 mb-4">
+              <input class="form-check-input" type="checkbox" id="termsAgreement" required>
+              <label class="form-check-label small text-muted" for="termsAgreement">
+                I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
+              </label>
+            </div>
+
+            <button class="btn btn-gradient btn-lg w-100 py-3 fw-bold" type="submit">
+              <i class="fas fa-rocket me-2"></i>Start My Journey
+            </button>
+
+            <!-- Social Login -->
+            <div class="text-center mt-4">
+              <p class="text-muted mb-3">Or join with</p>
+              <div class="d-flex gap-3 justify-content-center">
+                <button type="button" class="btn btn-outline-primary btn-sm social-btn">
+                  <i class="fab fa-google"></i>
+                </button>
+                <button type="button" class="btn btn-outline-primary btn-sm social-btn">
+                  <i class="fab fa-facebook-f"></i>
+                </button>
+                <button type="button" class="btn btn-outline-primary btn-sm social-btn">
+                  <i class="fab fa-apple"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="text-center mt-4 pt-3 border-top">
+              <p class="mb-0">
+                Already a member? 
+                <a href="{% url 'accounts:login' %}" class="fw-bold text-primary text-decoration-none">
+                  Log in to your account
+                </a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .registration-visual {
+    position: sticky;
+    top: 100px;
+  }
+
+  .main-visual {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .main-visual img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+  }
+
+  .visual-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    padding: 2rem;
+    color: white;
+  }
+
+  .benefit-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+  }
+
+  .benefit-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .benefit-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .registration-card {
+    background: white;
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .registration-icon {
+    background: linear-gradient(135deg, #3b82f6, #10b981) !important;
+  }
+
+  .bg-gradient {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-control {
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .form-control:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  .input-group-text {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-left: none;
+    border-radius: 0 12px 12px 0;
+  }
+
+  .form-control:focus + .input-group-text {
+    border-color: #3b82f6;
+  }
+
+  .toggle-password:hover {
+    background: #e2e8f0;
+  }
+
+  .social-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .social-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-gradient {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(59, 130, 246, 0.4);
+  }
+
+  .form-check-input:checked {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+  }
+
+  @media (max-width: 991.98px) {
+    .registration-visual {
+      position: relative;
+      top: 0;
+      margin-bottom: 2rem;
+    }
+    
+    .registration-card {
+      padding: 2rem;
+    }
+    
+    .main-visual img {
+      height: 250px;
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    .registration-card {
+      padding: 1.5rem;
+      border-radius: 20px;
+    }
+    
+    .main-visual img {
+      height: 200px;
+    }
+    
+    .visual-overlay {
+      padding: 1.5rem;
+    }
+    
+    .visual-overlay h3 {
+      font-size: 1.25rem;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Password visibility toggle
+    const toggleButtons = document.querySelectorAll('.toggle-password');
+    toggleButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const passwordInput = this.parentElement.querySelector('input');
+        const icon = this.querySelector('i');
+        
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          icon.classList.remove('fa-eye');
+          icon.classList.add('fa-eye-slash');
+        } else {
+          passwordInput.type = 'password';
+          icon.classList.remove('fa-eye-slash');
+          icon.classList.add('fa-eye');
+        }
+      });
+    });
+
+    // Form validation
+    const form = document.querySelector('.needs-validation');
+    form.addEventListener('submit', function(event) {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add('was-validated');
+    });
+
+    // Add floating animation to benefit cards
+    const benefitCards = document.querySelectorAll('.benefit-card');
+    benefitCards.forEach((card, index) => {
+      card.style.animationDelay = `${index * 0.1}s`;
+    });
+  });
+</script>
+{% endblock content %}

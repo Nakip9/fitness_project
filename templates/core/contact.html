@@ -1,0 +1,544 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contact | {{ SITE_NAME }}{% endblock title %}
+
+{% block content %}
+<section class="contact-section">
+  <div class="container">
+    <!-- Header Section -->
+    <div class="contact-header text-center">
+      <h1>Get In Touch</h1>
+      <p class="subtitle">We're here to help you start your fitness journey</p>
+    </div>
+
+    <div class="contact-content">
+      <div class="contact-grid">
+        <!-- Contact Information -->
+        <div class="contact-info">
+          <div class="info-card">
+            <h2>Visit Our Studio</h2>
+            <p class="info-description">Our flagship location features state-of-the-art equipment and expert trainers ready to guide you.</p>
+            
+            <div class="contact-details">
+              <div class="contact-item">
+                <div class="contact-icon">
+                  <i class="fas fa-location-dot"></i>
+                </div>
+                <div class="contact-text">
+                  <h3>Address</h3>
+                  <p>Soni krivoi 79A<br>Chelyabinsk, MP 12345</p>
+                </div>
+              </div>
+              
+              <div class="contact-item">
+                <div class="contact-icon">
+                  <i class="fas fa-phone"></i>
+                </div>
+                <div class="contact-text">
+                  <h3>Phone</h3>
+                  <p>+7(999) 236-7182</p>
+                </div>
+              </div>
+              
+              <div class="contact-item">
+                <div class="contact-icon">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <div class="contact-text">
+                  <h3>Email</h3>
+                  <p>JafriFit@{{ SITE_NAME|lower }}.com</p>
+                </div>
+              </div>
+              
+              <div class="contact-item">
+                <div class="contact-icon">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <div class="contact-text">
+                  <h3>Hours</h3>
+                  <p>Monday - Friday: 5:00 AM - 11:00 PM<br>Weekends: 6:00 AM - 10:00 PM</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="quick-actions">
+            <h3>Quick Connect</h3>
+            <div class="action-buttons">
+              <a href="tel:5551234567" class="action-btn">
+                <i class="fas fa-phone"></i>
+                <span>Call Now</span>
+              </a>
+              <a href="https://yandex.ru/maps/56/chelyabinsk/?ll=61.364241%2C55.159462&mode=poi&poi%5Bpoint%5D=61.363953%2C55.159194&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D172103723391&z=17.59" target="_blank" class="action-btn">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Get Directions</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="contact-form-container">
+          <div class="form-card">
+            <div class="form-header">
+              <i class="fas fa-paper-plane"></i>
+              <h2>Send Us a Message</h2>
+              <p>We'll get back to you within 24 hours</p>
+            </div>
+
+            <form method="POST" class="contact-form">
+              {% csrf_token %}
+              
+              {% if form.errors %}
+                <div class="form-error">
+                  <i class="fas fa-exclamation-circle"></i>
+                  <span>Please check the form for errors</span>
+                </div>
+              {% endif %}
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="{{ form.name.id_for_label }}">
+                    <i class="fas fa-user"></i>
+                    Full Name *
+                  </label>
+                  {{ form.name }}
+                  {% if form.name.errors %}
+                    <div class="error-message">{{ form.name.errors.0 }}</div>
+                  {% endif %}
+                </div>
+                
+                <div class="form-group">
+                  <label for="{{ form.email.id_for_label }}">
+                    <i class="fas fa-envelope"></i>
+                    Email Address *
+                  </label>
+                  {{ form.email }}
+                  {% if form.email.errors %}
+                    <div class="error-message">{{ form.email.errors.0 }}</div>
+                  {% endif %}
+                </div>
+              </div>
+{% comment %} 
+              <div class="form-group">
+                <label for="{{ form.phone.id_for_label }}">
+                  <i class="fas fa-phone"></i>
+                  Phone Number
+                </label>
+                {{ form.phone }}
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.subject.id_for_label }}">
+                  <i class="fas fa-tag"></i>
+                  Subject
+                </label>
+                {{ form.subject }}
+              </div> {% endcomment %}
+
+              <div class="form-group">
+                <label for="{{ form.message.id_for_label }}">
+                  <i class="fas fa-comment"></i>
+                  Your Message *
+                </label>
+                {{ form.message }}
+                {% if form.message.errors %}
+                  <div class="error-message">{{ form.message.errors.0 }}</div>
+                {% endif %}
+                <div class="help-text">Tell us about your fitness goals or questions</div>
+              </div>
+
+              <button type="submit" class="submit-btn">
+                <i class="fas fa-paper-plane"></i>
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+      <h2>Common Questions</h2>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>Do you offer free trial sessions?</h3>
+          <p>Yes! We offer one free trial session for new members. Contact us to schedule your complimentary workout.</p>
+        </div>
+        
+        <div class="faq-item">
+          <h3>What are your membership options?</h3>
+          <p>We offer flexible membership plans including monthly, quarterly, and annual options. All include access to equipment and group classes.</p>
+        </div>
+        
+        <div class="faq-item">
+          <h3>Do you have personal trainers?</h3>
+          <p>Absolutely! Our certified personal trainers offer one-on-one sessions tailored to your fitness goals and experience level.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-section {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  }
+
+  .contact-header {
+    margin-bottom: 4rem;
+  }
+
+  .contact-header h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .contact-header .subtitle {
+    font-size: 1.2rem;
+    color: #64748b;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 3rem;
+    margin-bottom: 4rem;
+  }
+
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .info-card, .form-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .info-card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .info-description {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+  }
+
+  .contact-item:hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .contact-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .contact-text h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .contact-text p {
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .quick-actions {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  .quick-actions h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .action-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    color: #475569;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .action-btn:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.1);
+  }
+
+  .form-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .form-header i {
+    font-size: 3rem;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+
+  .form-header h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-header p {
+    color: #64748b;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.75rem;
+  }
+
+  .form-group label i {
+    color: #3b82f6;
+  }
+
+  .form-control {
+    padding: 1rem 1.25rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .help-text {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
+  }
+
+  .error-message {
+    color: #dc2626;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }
+
+  .form-error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+    color: #dc2626;
+    margin-bottom: 1rem;
+  }
+
+  .submit-btn {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+    border: none;
+    padding: 1.25rem 2rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+  }
+
+  .faq-section {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  .faq-section h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .faq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .faq-item {
+    padding: 2rem;
+    background: #f8fafc;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .faq-item:hover {
+    background: white;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .faq-item h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .faq-item p {
+    color: #64748b;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 968px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+      grid-template-columns: 1fr;
+    }
+    
+    .contact-header h1 {
+      font-size: 2.5rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .contact-section {
+      padding: 2rem 0;
+    }
+    
+    .info-card, .form-card, .quick-actions, .faq-section {
+      padding: 1.5rem;
+    }
+    
+    .contact-header h1 {
+      font-size: 2rem;
+    }
+    
+    .faq-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock content %}

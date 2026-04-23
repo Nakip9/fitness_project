@@ -1,0 +1,733 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Memberships | {{ SITE_NAME }}{% endblock title %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="memberships-hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-badge">
+          <i class="fas fa-crown"></i>
+          Premium Memberships
+        </div>
+        <h1>Find Your Perfect <span>Training Plan</span></h1>
+        <p class="hero-description">Bespoke 1-on-1 coaching plans designed for every fitness level and goal. From weight loss to elite muscle building, get the personal attention your body needs.</p>
+        <div class="hero-actions">
+          <a href="#membership-plans" class="cta-button primary">
+            <i class="fas fa-calendar-check"></i>
+            Request Coaching
+          </a>
+          <a href="{% url 'core:contact' %}" class="cta-button secondary">
+            <i class="fas fa-question-circle"></i>
+            Get Advice
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-number">1-on-1</div>
+            <div class="stat-label">Personal Focus</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">Bespoke</div>
+            <div class="stat-label">Custom Protocols</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">Expert</div>
+            <div class="stat-label">Form Correction</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="main-image">
+          <img src="{% static 'img/jafrifit-hero.jpg' %}" alt="Premium gym facilities at {{ SITE_NAME }}">
+        </div>
+        <div class="floating-card equipment">
+          <div class="card-icon">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
+          <div class="card-text">
+            <div class="card-title">Flexible Plans</div>
+            <div class="card-subtitle">No Commitment</div>
+          </div>
+        </div>
+        <div class="floating-card classes">
+          <div class="card-icon">
+            <i class="fas fa-dumbbell"></i>
+          </div>
+          <div class="card-text">
+            <div class="card-title">All Access</div>
+            <div class="card-subtitle">Premium Equipment</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Membership Plans -->
+<section id="membership-plans" class="plans-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">Choose Your Path</div>
+      <h2>Training <span>Options</span></h2>
+      <p class="section-description">Select a bespoke coaching plan. Your coach will review your request and assign a precision time slot.</p>
+    </div>
+
+    <div class="plans-grid">
+      {% for plan in plans %}
+      <div class="plan-card {% if plan.featured %}featured{% endif %}">
+        {% if plan.featured %}
+        <div class="popular-badge">
+          <i class="fas fa-star"></i>
+          Most Popular
+        </div>
+        {% endif %}
+        
+        <div class="plan-header">
+          <h3>{{ plan.name }}</h3>
+          <div class="duration-badge">{{ plan.duration_days }} Days</div>
+        </div>
+
+        <div class="plan-price">
+          <span class="price">${{ plan.price_display }}</span>
+          <span class="period">/ {{ plan.duration_days }} Days</span>
+        </div>
+
+        <p class="plan-description">{{ plan.description|default:"Perfect for building strength and endurance." }}</p>
+
+        <div class="plan-benefits">
+          <div class="benefit">
+            <i class="fas fa-check-circle"></i>
+            <span>Bespoke 1-on-1 Protocols</span>
+          </div>
+          <div class="benefit">
+            <i class="fas fa-check-circle"></i>
+            <span>Video Form Analysis</span>
+          </div>
+          <div class="benefit">
+            <i class="fas fa-check-circle"></i>
+            <span>24/7 Coach Communication</span>
+          </div>
+        </div>
+
+        <a href="{% url 'memberships:plan_detail' plan.pk %}" class="plan-button {% if plan.featured %}primary{% else %}secondary{% endif %}">
+          {% if plan.featured %}
+          <i class="fas fa-bolt"></i>
+          Get Started
+          {% else %}
+          View Plan Details
+          {% endif %}
+        </a>
+      </div>
+      {% empty %}
+      <div class="no-plans">
+        <i class="fas fa-info-circle"></i>
+        <h3>Plans Coming Soon!</h3>
+        <p>We're preparing amazing membership plans for you. Check back soon!</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">All Plans Include</div>
+      <h2>Premium <span>Features</span></h2>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-bullseye"></i>
+        </div>
+        <h3>Bespoke Design</h3>
+        <p>Your program is architected specifically for your goals and physiology.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-video"></i>
+        </div>
+        <h3>Form Mastery</h3>
+        <p>Deep-dive video analysis to ensure every rep is safe and effective.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-utensils"></i>
+        </div>
+        <h3>Nutrition Logic</h3>
+        <p>Data-backed fueling protocols tailored to your metabolic rate.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-user-shield"></i>
+        </div>
+        <h3>Elite Support</h3>
+        <p>Direct priority access to your coach via the Training Hub.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="final-cta">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready to Get Started?</h2>
+      <p>Join thousands of members who have transformed their lives with our premium fitness programs.</p>
+      <div class="cta-actions">
+        <a href="{% url 'accounts:register' %}" class="cta-button primary">
+          <i class="fas fa-rocket"></i>
+          Join Now
+        </a>
+        <a href="{% url 'core:contact' %}" class="cta-button secondary">
+          <i class="fas fa-question-circle"></i>
+          Have Questions?
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Hero Section */
+  .memberships-hero {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(16, 185, 129, 0.9)), 
+                url('{% static "img/jafrifit-hero.jpg" %}');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 5rem 0;
+  }
+
+  .hero-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+  }
+
+  .hero-text h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-text h1 span {
+    background: linear-gradient(135deg, #fff, #e2e8f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-description {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    opacity: 0.95;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .cta-button.primary {
+    background: white;
+    color: #3b82f6;
+  }
+
+  .cta-button.secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+
+  .hero-visual {
+    position: relative;
+  }
+
+  .main-image {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+    border: 8px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .main-image img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+  }
+
+  .floating-card {
+    position: absolute;
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .floating-card.equipment {
+    top: 20px;
+    left: -20px;
+  }
+
+  .floating-card.classes {
+    bottom: 20px;
+    right: -20px;
+    animation-delay: 1.5s;
+  }
+
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+
+  .card-title {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.9rem;
+  }
+
+  .card-subtitle {
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Plans Section */
+  .plans-section {
+    padding: 5rem 0;
+    background: white;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .section-badge {
+    display: inline-block;
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .section-header h2 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .section-header h2 span {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .section-description {
+    font-size: 1.2rem;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+
+  .plan-card {
+    background: white;
+    border: 2px solid #f1f5f9;
+    border-radius: 20px;
+    padding: 2.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .plan-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+  }
+
+  .plan-card.featured {
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+  }
+
+  .popular-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .plan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+  }
+
+  .plan-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+  }
+
+  .duration-badge {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .plan-price {
+    margin-bottom: 1.5rem;
+  }
+
+  .plan-price .price {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1e293b;
+  }
+
+  .plan-price .period {
+    font-size: 1.2rem;
+    color: #64748b;
+  }
+
+  .plan-description {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .plan-benefits {
+    margin-bottom: 2.5rem;
+  }
+
+  .benefit {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .benefit i {
+    color: #10b981;
+    font-size: 1.1rem;
+  }
+
+  .benefit span {
+    color: #475569;
+  }
+
+  .plan-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .plan-button.primary {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+  }
+
+  .plan-button.secondary {
+    background: #f1f5f9;
+    color: #475569;
+  }
+
+  .plan-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .no-plans {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #f8fafc;
+    border-radius: 20px;
+  }
+
+  .no-plans i {
+    font-size: 3rem;
+    color: #3b82f6;
+    margin-bottom: 1.5rem;
+  }
+
+  .no-plans h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .no-plans p {
+    color: #64748b;
+    font-size: 1.1rem;
+  }
+
+  /* Features Section */
+  .features-section {
+    padding: 5rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .feature-card {
+    background: white;
+    padding: 2.5rem 2rem;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .feature-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    color: white;
+    font-size: 2rem;
+  }
+
+  .feature-card h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .feature-card p {
+    color: #64748b;
+    line-height: 1.6;
+  }
+
+  /* Final CTA */
+  .final-cta {
+    padding: 5rem 0;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+  }
+
+  .cta-content {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .cta-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .cta-content p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .hero-content {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      text-align: center;
+    }
+    
+    .hero-text h1 {
+      font-size: 3rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .memberships-hero {
+      padding: 3rem 0;
+    }
+    
+    .hero-text h1 {
+      font-size: 2.5rem;
+    }
+    
+    .plans-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .hero-actions,
+    .cta-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .cta-button {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .hero-stats {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .floating-card {
+      position: relative;
+      margin: 1rem 0;
+      animation: none;
+    }
+    
+    .floating-card.equipment,
+    .floating-card.classes {
+      position: relative;
+      top: auto;
+      left: auto;
+      right: auto;
+      bottom: auto;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero-text h1 {
+      font-size: 2rem;
+    }
+    
+    .section-header h2 {
+      font-size: 2.5rem;
+    }
+    
+    .plan-card {
+      padding: 2rem;
+    }
+    
+    .features-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock content %}

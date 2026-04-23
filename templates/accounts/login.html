@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Login | {{ SITE_NAME }}{% endblock title %}
+
+{% block content %}
+<section class="content-section content-section--panel">
+  <div class="container">
+    <div class="row g-5 align-items-center justify-content-center">
+      <div class="col-lg-5">
+        <div class="photo-stack mb-4">
+          <div class="photo-frame photo-frame--accent" aria-hidden="true"></div>
+          <div class="photo-frame photo-frame--warm" aria-hidden="true"></div>
+        </div>
+        <p class="photo-note text-uppercase mb-3">Bring in team portraits and studio energy</p>
+        <h2 class="section-heading mb-3">Energy meets accountability</h2>
+        <p class="lead">Log in to access your personalized training calendar, upcoming classes, and membership details.</p>
+      </div>
+      <div class="col-lg-5">
+        <div class="card-modern p-4 p-lg-5">
+          <h2 class="fw-semibold mb-4">Welcome back</h2>
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {% for field in form %}
+              <div class="mb-3">
+                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                  <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                  <div class="text-danger small">{{ error }}</div>
+                {% endfor %}
+              </div>
+            {% endfor %}
+            <button class="btn btn-primary w-100" type="submit">Log In</button>
+          </form>
+          <p class="mt-3 mb-0 text-muted">Don't have an account? <a class="link-accent" href="{% url 'accounts:register' %}">Join now</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

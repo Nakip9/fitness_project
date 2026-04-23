@@ -1,0 +1,110 @@
+/* General Styles for the Page */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fb;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Section Heading Styling */
+.section-heading {
+    font-size: 36px;
+    font-weight: bold;
+    color: #2c3e50;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+/* Section Heading Decoration (Underline with gradient effect) */
+.section-heading::after {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 4px;
+    background: linear-gradient(90deg, #3498db, #9b59b6);
+    bottom: -5px;
+    left: 0;
+}
+
+/* Membership Card Container */
+.membership-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+.membership-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Membership Card Title */
+.membership-card h4 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #34495e;
+}
+
+/* Membership Card Price */
+.membership-card .display-6 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #e74c3c;
+}
+
+/* Membership Card Benefits List */
+.membership-benefits {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.membership-benefits li {
+    font-size: 16px;
+    color: #7f8c8d;
+    margin-bottom: 10px;
+}
+
+.membership-benefits i {
+    color: #3498db;
+    margin-right: 8px;
+}
+
+/* Button Styling */
+.btn-gradient {
+    background: linear-gradient(135deg, #3498db, #9b59b6);
+    border: none;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background 0.3s ease-in-out;
+}
+
+.btn-gradient:hover {
+    background: linear-gradient(135deg, #9b59b6, #3498db);
+    cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .section-heading {
+        font-size: 30px;
+    }
+
+    .membership-card {
+        margin-bottom: 15px;
+    }
+
+    .membership-card h4 {
+        font-size: 20px;
+    }
+
+    .display-6 {
+        font-size: 22px;
+    }
+}

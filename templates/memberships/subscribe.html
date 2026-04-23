@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Activate {{ plan.name }} | {{ SITE_NAME }}{% endblock title %}
+
+{% block content %}
+<section class="subscribe-section py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+          <div class="card-header bg-primary text-white text-center py-4">
+            <h2 class="h4 mb-0">Instant Protocol Activation</h2>
+            <p class="small mb-0 opacity-75">Bespoke 1-on-1 Performance Architecture</p>
+          </div>
+          <div class="card-body p-4 p-md-5">
+            <div class="plan-summary mb-4 p-3 bg-light rounded-3 border-start border-4 border-primary">
+              <h3 class="h5 fw-bold">{{ plan.name }}</h3>
+              <p class="text-muted small mb-0">{{ plan.description }}</p>
+              <hr>
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Duration:</span>
+                <span class="fw-bold">{{ plan.duration_days }} Days</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Investment:</span>
+                <span class="fw-bold text-primary">${{ plan.price_display }}</span>
+              </div>
+            </div>
+
+            <form id="subscribe-form" method="POST" class="needs-validation">
+              {% csrf_token %}
+              <div class="mb-4">
+                <label class="form-label fw-bold">Training Goals</label>
+                <textarea id="user-goals" name="goals" class="form-control" rows="4" placeholder="What are your specific performance goals for this protocol?" required></textarea>
+                <div class="form-text">Your protocol starts immediately upon activation.</div>
+              </div>
+
+              <button type="submit" id="activate-btn" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold py-3 shadow">
+                <i class="fas fa-bolt me-2"></i> ACTIVATE & START COUNTDOWN
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EmailJS Integration -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="text/javascript">
+  (function() {
+    emailjs.init("oGLVwTeSTDVKa9WPR");
+  })();
+
+  document.getElementById('subscribe-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const btn = document.getElementById('activate-btn');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> DISPATCHING PROTOCOL...';
+    btn.disabled = true;
+
+    // Calculate dates for Email
+    const startDate = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    const endDate = new Date(new Date().getTime() + ({{ plan.duration_days }} * 24 * 60 * 60 * 1000)).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    const goals = document.getElementById('user-goals').value;
+
+    // Prepare EmailJS Data matching template_jwcqh99
+    const templateParams = {
+      name: "{{ request.user.username }}",
+      trainee_email: "{{ request.user.email }}",
+      time: new Date().toLocaleString(),
+      message: `PROTOCOL: {{ plan.name }}\nDURATION: {{ plan.duration_days }} Days\nTIMELINE: ${startDate} to ${endDate}\n\nGOALS SUBMITTED:\n${goals}`
+    };
+
+    console.log('Sending EmailJS...', templateParams);
+
+    // Send Email then Submit to Django
+    emailjs.send("service_lu2mdga", "template_jwcqh99", templateParams)
+      .then(function(response) {
+        console.log('EMAIL SUCCESS!', response.status, response.text);
+        document.getElementById('subscribe-form').submit();
+      }, function(error) {
+        console.error('EMAIL FAILED...', error);
+        // Activation is more important than the email, so we proceed anyway
+        document.getElementById('subscribe-form').submit();
+      });
+  });
+</script>
+
+<style>
+  .subscribe-section { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); min-height: 80vh; }
+  .btn-primary { background: linear-gradient(135deg, #3b82f6, #10b981); border: none; transition: 0.3s; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2); }
+</style>
+{% endblock content %}

@@ -1,0 +1,10 @@
+id,password,last_login,is_superuser,username,last_name,email,is_staff,is_active,date_joined,first_name
+1,pbkdf2_sha256$600000$KpoFACrrPH7Tk8xF79axLd$6VokvLfQHxGd8HGUWEfX5AfH6WfRmqNDKGFFGlWn/U8=,"2026-04-12 12:31:29.388100",1,admin,"",admin@example.com,1,1,"2026-04-12 10:17:38.618756",""
+2,pbkdf2_sha256$600000$IiVEbyUvDM6lvzhquVTfom$Pim1QR08MXr6jHZ3Cpnm5JGZxI6Z/e4YX3rDngw41pQ=,"2026-04-12 12:16:11.629535",0,new12,"",new12@gmail.com,0,1,"2026-04-12 10:23:16.933114",""
+3,pbkdf2_sha256$600000$GZPe511k1uhANTLhtymteV$9a1+9Y+9O6WEcgaF2swqjwcTOKDPdnCxiYN/ldUDB6g=,"2026-04-12 12:29:31.237967",0,abaz,"",gamesports775@gmail.com,0,1,"2026-04-12 10:57:11.087907",""
+4,pbkdf2_sha256$600000$sAV3vUKDVIGXXZAWoAW4DI$48eExSUqwTQvfAjvaED/F8Qeth7bOpauc4eaDJ/EWDg=,"2026-04-12 11:00:29.683471",0,sda,"",ahmedabaza708@gmail.com,0,1,"2026-04-12 11:00:29.307340",""
+5,pbkdf2_sha256$600000$R7zELxc8uia5cQUUegdwcY$9NxRhtIGTV96SPqtPXD679Wk+CWLB32jPEtJYIhgtTw=,"2026-04-12 12:35:18.572436",0,abz,"",sadeqeissa@gmail.com,0,1,"2026-04-12 11:06:20.383738",""
+6,pbkdf2_sha256$600000$M1GYGxroKNtSnhoXCf0J38$g8bh/XS5pv6cAcgOZpbo9GSXrXqmcVvKyiFZnznt5cA=,"2026-04-12 11:26:21.737795",0,new99,"",gamesports775@gmail.com,0,1,"2026-04-12 11:25:16.822242",""
+7,pbkdf2_sha256$600000$RkJ87c7ru3rSj8PIuNXUXE$mmjvTFbCvO9UQ+hc9CJ7r6a86xOag29fT/yq5X0UoQs=,"2026-04-12 12:30:44.813900",0,last1,"",ahmedabaza6006@gmail.com,0,1,"2026-04-12 12:30:44.456489",""
+8,pbkdf2_sha256$600000$Jr0K3nkf9YFKuqpyu0iBhr$XudJCbDAzFIvSy9LxBu8rv+hOo1cWV2Co7KENAYObso=,"2026-04-12 12:38:06.576410",0,last19,"",gamesports775@gmail.com,0,1,"2026-04-12 12:38:06.207755",""
+9,pbkdf2_sha256$600000$eMqKXUWQd6pQSXUVdViSLq$lACgju02pKSJCIyzVldxCeySMoLpY0YKfNgQQZsdel8=,"2026-04-12 12:41:24.261201",0,ahmed,"",ahmedabaza6006@gmail.com,0,1,"2026-04-12 12:41:23.891768",""

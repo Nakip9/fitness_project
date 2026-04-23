@@ -1,0 +1,811 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ plan.name }} | {{ SITE_NAME }}{% endblock title %}
+
+{% block content %}
+<section class="plan-detail-section">
+  <div class="container">
+    <!-- Header Section -->
+    <div class="plan-header">
+      <div class="breadcrumb">
+        <a href="{% url 'memberships:plan_list' %}">Memberships</a>
+        <span>/</span>
+        <span>{{ plan.name }}</span>
+      </div>
+      <h1>{{ plan.name }}</h1>
+      <p class="plan-subtitle">Bespoke performance architecture tailored to your unique physiology</p>
+    </div>
+
+    <div class="plan-content">
+      <!-- Main Content -->
+      <div class="plan-main">
+        <!-- Plan Highlights -->
+        <div class="plan-highlights">
+          <div class="price-section">
+            <div class="price-tag">
+              <span class="amount">${{ plan.price_display }}</span>
+              <span class="period">/ {{ plan.duration_days }} days</span>
+            </div>
+            <div class="price-badge">
+              <i class="fas fa-star"></i>
+              Most Popular Choice
+            </div>
+          </div>
+
+          <p class="plan-description">
+            {{ plan.description|default:"Our signature membership with unlimited classes, 24/7 gym access, and monthly wellness coaching. Experience the ultimate fitness transformation with personalized support." }}
+          </p>
+
+          <!-- Quick Stats -->
+          <div class="plan-stats">
+            <div class="stat">
+              <i class="fas fa-bullseye"></i>
+              <div>
+                <span class="value">Bespoke</span>
+                <span class="label">Programming</span>
+              </div>
+            </div>
+            <div class="stat">
+              <i class="fas fa-video"></i>
+              <div>
+                <span class="value">Form</span>
+                <span class="label">Correction</span>
+              </div>
+            </div>
+            <div class="stat">
+              <i class="fas fa-utensils"></i>
+              <div>
+                <span class="value">Custom</span>
+                <span class="label">Nutrition</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Benefits Section -->
+        <div class="benefits-section">
+          <h2>Protocol Inclusions</h2>
+          <div class="benefits-grid">
+            <div class="benefit-item">
+              <div class="benefit-icon"><i class="fas fa-check"></i></div>
+              <span>1-on-1 Strategy Kickoff</span>
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-icon"><i class="fas fa-check"></i></div>
+              <span>Custom Biomechanical Assessment</span>
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-icon"><i class="fas fa-check"></i></div>
+              <span>Metabolic Nutrition Protocol</span>
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-icon"><i class="fas fa-check"></i></div>
+              <span>Priority Coach Communication Hub</span>
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-icon"><i class="fas fa-check"></i></div>
+              <span>Weekly Progress Audits</span>
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-icon"><i class="fas fa-check"></i></div>
+              <span>Form Correction via Video Analysis</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Features Comparison -->
+        <div class="features-section">
+          <h2>Plan Features</h2>
+          <div class="features-list">
+            <div class="feature-category">
+              <h3>🏋️ Gym Access</h3>
+              <ul>
+                <li><i class="fas fa-check"></i> 24/7 facility access</li>
+                <li><i class="fas fa-check"></i> Premium strength equipment</li>
+                <li><i class="fas fa-check"></i> Cardio zone with latest machines</li>
+                <li><i class="fas fa-check"></i> Functional training area</li>
+              </ul>
+            </div>
+            <div class="feature-category">
+              <h3>👥 Group Classes</h3>
+              <ul>
+                <li><i class="fas fa-check"></i> Unlimited class bookings</li>
+                <li><i class="fas fa-check"></i> Yoga & Pilates sessions</li>
+                <li><i class="fas fa-check"></i> High-intensity interval training</li>
+                <li><i class="fas fa-check"></i> Cycling and dance classes</li>
+              </ul>
+            </div>
+            <div class="feature-category">
+              <h3>💎 Premium Perks</h3>
+              <ul>
+                <li><i class="fas fa-check"></i> Locker room with amenities</li>
+                <li><i class="fas fa-check"></i> Recovery lounge access</li>
+                <li><i class="fas fa-check"></i> Monthly guest passes</li>
+                <li><i class="fas fa-check"></i> Nutrition consultation</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar - Call to Action -->
+      <div class="plan-sidebar">
+        <div class="cta-card">
+          <div class="cta-header">
+            <i class="fas fa-crown"></i>
+            <h3>Start Your Journey</h3>
+            <p>Join {{ SITE_NAME }} today and transform your life</p>
+          </div>
+
+          <div class="cta-content">
+            {% if user.is_authenticated %}
+            <div class="cta-benefits">
+              <div class="benefit">
+                <i class="fas fa-phone"></i>
+                <div>
+                  <strong>Personalized Setup</strong>
+                  <span>We'll call to customize your experience</span>
+                </div>
+              </div>
+              <div class="benefit">
+                <i class="fas fa-clock"></i>
+                <div>
+                  <strong>Quick Response</strong>
+                  <span>Get a callback within 2 hours</span>
+                </div>
+              </div>
+              <div class="benefit">
+                <i class="fas fa-star"></i>
+                <div>
+                  <strong>Expert Guidance</strong>
+                  <span>Professional fitness assessment</span>
+                </div>
+              </div>
+            </div>
+
+            <a href="{% url 'memberships:subscribe' plan.pk %}" class="cta-button primary">
+              <i class="fas fa-paper-plane"></i>
+              Apply for Coaching
+            </a>
+            <p class="cta-note">Coach will manually review your application</p>
+
+            {% else %}
+            <div class="cta-benefits">
+              <div class="benefit">
+                <i class="fas fa-user-plus"></i>
+                <div>
+                  <strong>Create Account</strong>
+                  <span>Quick and easy registration</span>
+                </div>
+              </div>
+              <div class="benefit">
+                <i class="fas fa-dumbbell"></i>
+                <div>
+                  <strong>Instant Access</strong>
+                  <span>Browse all membership options</span>
+                </div>
+              </div>
+              <div class="benefit">
+                <i class="fas fa-comments"></i>
+                <div>
+                  <strong>Expert Support</strong>
+                  <span>Get personalized recommendations</span>
+                </div>
+              </div>
+            </div>
+
+            <a href="{% url 'accounts:register' %}" class="cta-button primary">
+              <i class="fas fa-user-plus"></i>
+              Join to Continue
+            </a>
+            <p class="cta-note">Create account to explore memberships</p>
+            {% endif %}
+          </div>
+
+          <!-- Trust Indicators -->
+          <div class="trust-indicators">
+            <div class="trust-item">
+              <i class="fas fa-shield-alt"></i>
+              <span>Secure Registration</span>
+            </div>
+            <div class="trust-item">
+              <i class="fas fa-calendar-check"></i>
+              <span>Flexible Cancellation</span>
+            </div>
+            <div class="trust-item">
+              <i class="fas fa-users"></i>
+              <span>2,000+ Members</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Support -->
+        <div class="support-card">
+          <h4>Need Help Choosing?</h4>
+          <p>Our fitness experts are here to guide you to the perfect plan</p>
+          <div class="support-options">
+            <a href="{% url 'core:contact' %}" class="support-button">
+              <i class="fas fa-comments"></i>
+              Chat with Expert
+            </a>
+            <a href="tel:5551234567" class="support-button outline">
+              <i class="fas fa-phone"></i>
+              Call Now
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Stories -->
+    <div class="success-preview">
+      <h2>Members Love This Plan</h2>
+      <div class="testimonials-grid">
+        <div class="testimonial">
+          <div class="member-info">
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="Mike">
+            <div>
+              <strong>Mike R.</strong>
+              <span>Member for 1 year</span>
+            </div>
+          </div>
+          <p>"The perfect balance of classes and gym time. I've never been more consistent with my fitness!"</p>
+          <div class="rating">★★★★★</div>
+        </div>
+        <div class="testimonial">
+          <div class="member-info">
+            <img src="{% static 'img/sarah_girl_por.jpeg' %}" alt="Sarah">
+            <div>
+              <strong>Sarah L.</strong>
+              <span>Member for 6 months</span>
+            </div>
+          </div>
+          <p>"The variety of classes keeps me motivated. I've tried yoga, cycling, and HIIT - all amazing!"</p>
+          <div class="rating">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .plan-detail-section {
+    padding: 3rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    min-height: 100vh;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #64748b;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .breadcrumb a {
+    color: #3b82f6;
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .plan-header h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .plan-subtitle {
+    font-size: 1.3rem;
+    color: #64748b;
+    margin-bottom: 3rem;
+  }
+
+  .plan-content {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 3rem;
+    margin-bottom: 4rem;
+  }
+
+  .plan-highlights {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+  }
+
+  .price-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+  }
+
+  .price-tag .amount {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1e293b;
+  }
+
+  .price-tag .period {
+    font-size: 1.2rem;
+    color: #64748b;
+    margin-left: 0.5rem;
+  }
+
+  .price-badge {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .plan-description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #64748b;
+    margin-bottom: 2rem;
+  }
+
+  .plan-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 12px;
+  }
+
+  .stat i {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.1rem;
+  }
+
+  .stat .value {
+    display: block;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat .label {
+    font-size: 0.9rem;
+    color: #64748b;
+  }
+
+  .benefits-section {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+  }
+
+  .benefits-section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  .benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 12px;
+  }
+
+  .benefit-icon {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  .features-section {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  .features-section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+  }
+
+  .features-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .feature-category h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .feature-category ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .feature-category li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: #64748b;
+  }
+
+  .feature-category li i {
+    color: #10b981;
+  }
+
+  /* Sidebar Styles */
+  .plan-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .cta-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    text-align: center;
+  }
+
+  .cta-header i {
+    font-size: 3rem;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+
+  .cta-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .cta-header p {
+    color: #64748b;
+    margin-bottom: 2rem;
+  }
+
+  .cta-benefits {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .benefit {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-align: left;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 12px;
+  }
+
+  .benefit i {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .benefit strong {
+    display: block;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+  }
+
+  .benefit span {
+    font-size: 0.9rem;
+    color: #64748b;
+  }
+
+  .cta-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 1.25rem 2rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .cta-button.primary {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+  }
+
+  .cta-note {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-top: 1rem;
+  }
+
+  .trust-indicators {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .trust-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .trust-item i {
+    color: #10b981;
+    font-size: 1.2rem;
+  }
+
+  .trust-item span {
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+
+  .support-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    text-align: center;
+  }
+
+  .support-card h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .support-card p {
+    color: #64748b;
+    margin-bottom: 1.5rem;
+  }
+
+  .support-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .support-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .support-button {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+  }
+
+  .support-button.outline {
+    background: transparent;
+    color: #3b82f6;
+    border: 2px solid #3b82f6;
+  }
+
+  .support-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .success-preview {
+    background: white;
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  .success-preview h2 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 2rem;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .testimonial {
+    padding: 2rem;
+    background: #f8fafc;
+    border-radius: 16px;
+  }
+
+  .member-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .member-info img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .member-info strong {
+    display: block;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+  }
+
+  .member-info span {
+    font-size: 0.9rem;
+    color: #64748b;
+  }
+
+  .testimonial p {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+
+  .rating {
+    color: #fbbf24;
+    font-size: 1.1rem;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .plan-content {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    
+    .plan-sidebar {
+      order: -1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .plan-detail-section {
+      padding: 2rem 0;
+    }
+    
+    .plan-header h1 {
+      font-size: 2.5rem;
+    }
+    
+    .price-section {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    
+    .plan-stats {
+      grid-template-columns: 1fr;
+    }
+    
+    .benefits-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .features-list {
+      grid-template-columns: 1fr;
+    }
+    
+    .trust-indicators {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .plan-header h1 {
+      font-size: 2rem;
+    }
+    
+    .plan-highlights,
+    .benefits-section,
+    .features-section,
+    .cta-card,
+    .support-card,
+    .success-preview {
+      padding: 1.5rem;
+    }
+    
+    .price-tag .amount {
+      font-size: 2.5rem;
+    }
+  }
+</style>
+{% endblock content %}

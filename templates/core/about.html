@@ -1,0 +1,705 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About | {{ SITE_NAME }}{% endblock title %}
+
+{% block content %}
+<section class="about-hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1>Where Passion Meets Performance</h1>
+      <p class="hero-subtitle">Transforming lives through fitness, community, and expert guidance</p>
+      <a href="{% url 'memberships:plan_list' %}" class="cta-button">
+        <i class="fas fa-heart"></i>
+        Join Our Community
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="our-story">
+  <div class="container">
+    <div class="story-grid">
+      <div class="story-content">
+        <h2>Our Story</h2>
+        <p class="story-intro">We built {{ SITE_NAME }} for athletes, creators, and anyone who wants to feel stronger every day. What started as a vision to create the ultimate fitness experience has grown into a community of thousands transforming their lives.</p>
+        
+        <div class="story-features">
+          <div class="feature">
+            <i class="fas fa-dumbbell"></i>
+            <div>
+              <h3>Elite Coaching</h3>
+              <p>Certified trainers with proven track records of success</p>
+            </div>
+          </div>
+          <div class="feature">
+            <i class="fas fa-users"></i>
+            <div>
+              <h3>Supportive Community</h3>
+              <p>Join like-minded individuals on their fitness journey</p>
+            </div>
+          </div>
+          <div class="feature">
+            <i class="fas fa-star"></i>
+            <div>
+              <h3>Premium Facilities</h3>
+              <p>State-of-the-art equipment in inspiring environments</p>
+            </div>
+          </div>
+        </div>
+
+        <p>From sunrise bootcamps to restorative evening yoga, our experiences are designed around your goals. We blend immersive sound, lighting, and energy to deliver classes that feel like events.</p>
+      </div>
+
+      <div class="story-visual">
+        <div class="main-image">
+          <img src="{% static 'img/in_fit.jpg' %}" alt="Modern fitness studio at {{ SITE_NAME }}">
+        </div>
+        <div class="stats-card">
+          <div class="stat">
+            <span class="number">5+</span>
+            <span class="label">Years Experience</span>
+          </div>
+          <div class="stat">
+            <span class="number">2,000+</span>
+            <span class="label">Members Transformed</span>
+          </div>
+          <div class="stat">
+            <span class="number">50+</span>
+            <span class="label">Weekly Classes</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="why-choose-us">
+  <div class="container">
+    <h2>Why Members Choose Us</h2>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <h3>Award-Winning Trainers</h3>
+        <p>Our team includes nationally recognized fitness experts and wellness professionals with years of experience.</p>
+      </div>
+      
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <i class="fas fa-gem"></i>
+        </div>
+        <h3>Boutique Experience</h3>
+        <p>Premium equipment and personalized attention in a luxurious, well-maintained environment.</p>
+      </div>
+      
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <h3>Flexible Schedule</h3>
+        <p>Classes across multiple disciplines from early morning to late evening, 7 days a week.</p>
+      </div>
+      
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <i class="fas fa-apple-alt"></i>
+        </div>
+        <h3>Holistic Approach</h3>
+        <p>Nutrition coaching, recovery lounges, and exclusive member events for complete wellness.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="success-stories">
+  <div class="container">
+    <h2>Transformations That Inspire</h2>
+    <p class="section-subtitle">Real members, real results</p>
+    
+    <div class="stories-grid">
+      <div class="story-card">
+        <div class="member-photo">
+          <img src="https://images.unsplash.com/photo-1534367610401-9f5ed68180aa?w=400&h=400&fit=crop" alt="Sarah's transformation">
+        </div>
+        <div class="story-content">
+          <h3>Sarah's Journey</h3>
+          <p class="member-stats">Lost 45 lbs • Marathon Runner • 18 months</p>
+          <p>"I never thought I could run a mile, let alone a marathon. The trainers at {{ SITE_NAME }} believed in me when I didn't believe in myself. The community kept me going on tough days."</p>
+          <div class="achievements">
+            <span class="achievement">First Marathon</span>
+            <span class="achievement">45 lbs Lost</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="story-card">
+        <div class="member-photo">
+          <img src="https://media.istockphoto.com/id/2149147244/de/foto/young-athletic-man-checking-pulse-on-smart-watch-while-riding-bicycle-in-a-domestic-room-at.jpg?s=1024x1024&w=is&k=20&c=jqnVZPtbMICfsYp_hWkAnrPTpA92-VxuztUgYsYoMkc=" alt="Mike's transformation">
+        </div>
+        <div class="story-content">
+          <h3>Mike's Transformation</h3>
+          <p class="member-stats">Gained 20 lbs muscle • Powerlifter • 2 years</p>
+          <p>"The expert guidance and premium equipment helped me transform from skinny to strong. I've doubled my strength and gained confidence in every aspect of my life."</p>
+          <div class="achievements">
+            <span class="achievement">Strength Coach</span>
+            <span class="achievement">20 lbs Muscle</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="story-card">
+        <div class="member-photo">
+          <img src="{% static 'img/women_workingout_1.jpg' %}" alt="Lisa's transformation">
+        </div>
+        <div class="story-content">
+          <h3>Lisa's Success</h3>
+          <p class="member-stats">Yoga Instructor • Stress Management • 1 year</p>
+          <p>"{{ SITE_NAME }} helped me find balance. The yoga classes and supportive community taught me that fitness is about mental health as much as physical strength."</p>
+          <div class="achievements">
+            <span class="achievement">Yoga Certified</span>
+            <span class="achievement">Stress Free</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="video-tour">
+  <div class="container">
+    <div class="video-content">
+      <h2>Take a Virtual Tour</h2>
+      <p>See our state-of-the-art facilities and experience the {{ SITE_NAME }} difference</p>
+      
+      <div class="video-container">
+        <div class="video-placeholder">
+          <i class="fas fa-play"></i>
+          <p>Studio Tour Video</p>
+          <a href="https://www.youtube.com/watch?v=U1zCyaQc91g&t=605s" target="_blank" class="video-link">
+            Watch on YouTube <i class="fab fa-youtube"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div class="video-features">
+        <div class="video-feature">
+          <i class="fas fa-dumbbell"></i>
+          <span>Premium Equipment</span>
+        </div>
+        <div class="video-feature">
+          <i class="fas fa-users"></i>
+          <span>Group Classes</span>
+        </div>
+        <div class="video-feature">
+          <i class="fas fa-spa"></i>
+          <span>Recovery Areas</span>
+        </div>
+        <div class="video-feature">
+          <i class="fas fa-lock"></i>
+          <span>Secure Facilities</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready to Write Your Success Story?</h2>
+      <p>Join thousands of members who have transformed their lives with our proven approach to fitness and wellness.</p>
+      <div class="cta-buttons">
+        <a href="{% url 'memberships:plan_list' %}" class="cta-button primary">
+          <i class="fas fa-star"></i>
+          View Membership Plans
+        </a>
+        <a href="{% url 'core:contact' %}" class="cta-button secondary">
+          <i class="fas fa-question-circle"></i>
+          Ask Questions
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-hero {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(16, 185, 129, 0.9)), 
+                url('{% static "img/jafrifit-hero.jpg" %}');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 6rem 0;
+    text-align: center;
+  }
+
+  .hero-content h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+  }
+
+  .hero-subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 2.5rem;
+    opacity: 0.95;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: white;
+    color: #3b82f6;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .our-story {
+    padding: 5rem 0;
+    background: white;
+  }
+
+  .story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .story-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .story-intro {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: #64748b;
+    margin-bottom: 2rem;
+  }
+
+  .story-features {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2.5rem 0;
+  }
+
+  .feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .feature i {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.5rem;
+    margin-top: 0.25rem;
+  }
+
+  .feature h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .feature p {
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .story-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .main-image {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  }
+
+  .main-image img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+  }
+
+  .stats-card {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .stat .number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat .label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+
+  .why-choose-us {
+    padding: 5rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  }
+
+  .why-choose-us h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 3rem;
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+  .benefit-card {
+    background: white;
+    padding: 2.5rem 2rem;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  }
+
+  .benefit-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  }
+
+  .benefit-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    color: white;
+    font-size: 2rem;
+  }
+
+  .benefit-card h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .benefit-card p {
+    color: #64748b;
+    line-height: 1.6;
+  }
+
+  .success-stories {
+    padding: 5rem 0;
+    background: white;
+  }
+
+  .success-stories h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .section-subtitle {
+    text-align: center;
+    color: #64748b;
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+  }
+
+  .stories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+
+  .story-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  }
+
+  .story-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  }
+
+  .member-photo {
+    height: 250px;
+    overflow: hidden;
+  }
+
+  .member-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .story-card:hover .member-photo img {
+    transform: scale(1.05);
+  }
+
+  .story-content {
+    padding: 2rem;
+  }
+
+  .story-content h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .member-stats {
+    color: #3b82f6;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .story-content p {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .achievements {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .achievement {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .video-tour {
+    padding: 5rem 0;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+  }
+
+  .video-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .video-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .video-content p {
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+  }
+
+  .video-container {
+    margin-bottom: 3rem;
+  }
+
+  .video-placeholder {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 4rem 2rem;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .video-placeholder:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .video-placeholder i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+  }
+
+  .video-placeholder p {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .video-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    color: #3b82f6;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .video-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  .video-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .video-feature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.9;
+  }
+
+  .video-feature i {
+    font-size: 1.5rem;
+  }
+
+  .final-cta {
+    padding: 5rem 0;
+    background: white;
+  }
+
+  .cta-content {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .cta-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-content p {
+    font-size: 1.2rem;
+    color: #64748b;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cta-button.primary {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+  }
+
+  .cta-button.secondary {
+    background: transparent;
+    color: #3b82f6;
+    border: 2px solid #3b82f6;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 968px) {
+    .story-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    
+    .hero-content h1 {
+      font-size: 2.5rem;
+    }
+    
+    .stats-card {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .about-hero {
+      padding: 4rem 0;
+    }
+    
+    .hero-content h1 {
+      font-size: 2rem;
+    }
+    
+    .stories-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .cta-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .cta-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+{% endblock content %}

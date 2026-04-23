@@ -1,0 +1,1114 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home | {{ SITE_NAME }}{% endblock title %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="home-hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-badge">
+          <i class="fas fa-fire"></i>
+          Welcome to {{ SITE_NAME }}
+        </div>
+        <h1>Bespoke 1-on-1 <span>Personal Training</span></h1>
+        <p class="hero-description">Elite coaching tailored to your exact body and goals. From form correction to custom nutrition plans, get the professional attention you deserve.</p>
+        <div class="hero-actions">
+          <a href="{% url 'memberships:plan_list' %}" class="cta-button primary">
+            <i class="fas fa-calendar-check"></i>
+            Request Coaching
+          </a>
+          <a href="{% url 'core:about' %}" class="cta-button secondary">
+            <i class="fas fa-play-circle"></i>
+            Watch Results
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-number">100+</div>
+            <div class="stat-label">Success Stories</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">10+</div>
+            <div class="stat-label">Years Experience</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">1-on-1</div>
+            <div class="stat-label">Dedicated Focus</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="main-image">
+          <img src="{% static 'img/blue_photo.jpg' %}" alt="Athletes training at {{ SITE_NAME }}">
+        </div>
+        <div class="floating-card equipment">
+          <div class="card-icon">
+            <i class="fas fa-bullseye"></i>
+          </div>
+          <div class="card-text">
+            <div class="card-title">Bespoke Plans</div>
+            <div class="card-subtitle">Tailored to You</div>
+          </div>
+        </div>
+        <div class="floating-card classes">
+          <div class="card-icon">
+            <i class="fas fa-utensils"></i>
+          </div>
+          <div class="card-text">
+            <div class="card-title">Nutrition Goals</div>
+            <div class="card-subtitle">Custom Fueling</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">Why Choose 1-on-1</div>
+      <h2>Experience Fitness <span>Perfected</span></h2>
+      <p class="section-description">Personalized training that respects your time, your goals, and your unique physiology.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-bullseye"></i>
+        </div>
+        <h3>Custom Programming</h3>
+        <p>No cookie-cutter routines. Every workout is designed specifically for your goals and current level.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-utensils"></i>
+        </div>
+        <h3>Nutrition Coaching</h3>
+        <p>Get a custom meal plan and supplement guidance that actually fits your lifestyle.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-video"></i>
+        </div>
+        <h3>Form Correction</h3>
+        <p>Ensure every rep counts with expert guidance on biomechanics and injury prevention.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Membership Plans Section -->
+<section class="plans-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">Memberships</div>
+      <h2>Choose Your <span>Fitness Journey</span></h2>
+      <p class="section-description">Flexible membership options designed to energize every fitness journey. Switch plans anytime as you level up.</p>
+    </div>
+    <div class="plans-grid">
+      {% for plan in plans %}
+      <div class="plan-card {% if plan.featured %}featured{% endif %}">
+        {% if plan.featured %}
+        <div class="popular-badge">
+          <i class="fas fa-star"></i>
+          Most Popular
+        </div>
+        {% endif %}
+        
+        <div class="plan-header">
+          <h3>{{ plan.name }}</h3>
+          <div class="duration-badge">{{ plan.duration_days }} Days</div>
+        </div>
+
+        <div class="plan-price">
+          <span class="price">${{ plan.price_display }}</span>
+          <span class="period">/ {{ plan.duration_days }} Days</span>
+        </div>
+
+        <p class="plan-description">{{ plan.description|default:"Perfect for building strength and endurance." }}</p>
+
+        <div class="plan-benefits">
+          <div class="benefit">
+            <i class="fas fa-check-circle"></i>
+            <span>Bespoke 1-on-1 Protocols</span>
+          </div>
+          <div class="benefit">
+            <i class="fas fa-check-circle"></i>
+            <span>Form Correction & Video Feedback</span>
+          </div>
+          <div class="benefit">
+            <i class="fas fa-check-circle"></i>
+            <span>Metabolic Nutrition Plan</span>
+          </div>
+        </div>
+
+        <a href="{% url 'memberships:plan_detail' plan.pk %}" class="plan-button {% if plan.featured %}primary{% else %}secondary{% endif %}">
+          {% if plan.featured %}
+          <i class="fas fa-bolt"></i>
+          Get Started
+          {% else %}
+          View Plan Details
+          {% endif %}
+        </a>
+      </div>
+      {% empty %}
+      <div class="no-plans">
+        <i class="fas fa-info-circle"></i>
+        <h3>Plans Coming Soon!</h3>
+        <p>We're preparing amazing membership plans for you. Check back soon!</p>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="section-footer">
+      <a href="{% url 'memberships:plan_list' %}" class="view-all-button">
+        <i class="fas fa-arrow-right"></i>
+        See All Plans
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">Success Stories</div>
+      <h2>Transformations That <span>Inspire Us</span></h2>
+      <p class="section-description">Real members, real results. See how our community is achieving their fitness goals.</p>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="member-info">
+          <div class="member-avatar">
+            <img src="{% static 'img/hisham_1.jpg' %}" alt="Alex Johnson">
+            <div class="achievement-badge">
+              <i class="fas fa-trophy"></i>
+            </div>
+          </div>
+          <div class="member-details">
+            <h4>Kozaman Hesham</h4>
+            <p>Lost 30 lbs • 2 years</p>
+          </div>
+        </div>
+        <div class="testimonial-content">
+          <p>"The trainers here are incredible! I've not only lost 30 pounds but gained so much confidence and energy. The personalized approach made all the difference."</p>
+        </div>
+        <div class="testimonial-footer">
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="verified-badge">
+            <i class="fas fa-check-circle"></i>
+            Verified Member
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card featured">
+        <div class="featured-badge">
+          <i class="fas fa-star"></i>
+          Member of the Month
+        </div>
+        <div class="member-info">
+          <div class="member-avatar">
+            <img src="{% static 'img/sumbol.jpg' %}" alt="Sarah Miller">
+            <div class="achievement-badge">
+              <i class="fas fa-heart"></i>
+            </div>
+          </div>
+          <div class="member-details">
+            <h4>Basumbol Ahmed</h4>
+            <p>Marathon Runner • 1 year</p>
+          </div>
+        </div>
+        <div class="testimonial-content">
+          <p>"The community support is absolutely amazing. From my first day, everyone was so welcoming. I went from couch to marathon runner in just one year!"</p>
+        </div>
+        <div class="testimonial-footer">
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="verified-badge">
+            <i class="fas fa-check-circle"></i>
+            Verified Member
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="member-info">
+          <div class="member-avatar">
+            <img src="{% static 'img/sarah_girl_2.jpg' %}" alt="Sarh sarah">
+            <div class="achievement-badge">
+              <i class="fas fa-dumbbell"></i>
+            </div>
+          </div>
+          <div class="member-details">
+            <h4>Sarah Mukamodova</h4>
+            <p>Strength Coach • 6 months</p>
+          </div>
+        </div>
+        <div class="testimonial-content">
+          <p>"Best equipment and facilities in town. As a busy professional, the 24/7 access is a game-changer. The trainers helped me double my strength in 6 months!"</p>
+        </div>
+        <div class="testimonial-footer">
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+          <div class="verified-badge">
+            <i class="fas fa-check-circle"></i>
+            Verified Member
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">500+</div>
+          <div class="stat-label">Active Members</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">4.9/5</div>
+          <div class="stat-label">Average Rating</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">95%</div>
+          <div class="stat-label">Would Recommend</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">2,000+</div>
+          <div class="stat-label">Transformations</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Testimonials CTA -->
+<div class="cta-actions">
+    <a href="{% url 'memberships:plan_list' %}" class="cta-button primary" style="background-color: #ff6347;">
+        <i class="fas fa-bolt"></i>
+        Start Your Journey
+    </a>
+    <a href="{% url 'core:about' %}" class="cta-button secondary" style="background-color: #45a049;">
+        <i class="fas fa-play"></i>
+        Watch Stories
+    </a>
+</div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA Section -->
+<section class="final-cta">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready to Transform Your Life?</h2>
+      <p>Join {{ SITE_NAME }} today and unlock premium classes, personal coaching, and a community that keeps you motivated every step of the way.</p>
+      <a href="{% url 'accounts:register' %}" class="cta-button primary large">
+        <i class="fas fa-rocket"></i>
+        Start Your Journey
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Hero Section */
+  .home-hero {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(16, 185, 129, 0.9)), 
+                url('{% static "img/background_fit.jpg" %}');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 5rem 0;
+  }
+
+  .hero-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+  }
+
+  .hero-text h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-text h1 span {
+    background: linear-gradient(135deg, #fff, #e2e8f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-description {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    opacity: 0.95;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .cta-button.primary {
+    background: white;
+    color: #3b82f6;
+  }
+
+  .cta-button.secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+  }
+
+  .cta-button.large {
+    padding: 1.25rem 2.5rem;
+    font-size: 1.1rem;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+
+  .hero-visual {
+    position: relative;
+  }
+
+  .main-image {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+    border: 8px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .main-image img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+  }
+
+  .floating-card {
+    position: absolute;
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .floating-card.equipment {
+    top: 20px;
+    left: -20px;
+  }
+
+  .floating-card.classes {
+    bottom: 20px;
+    right: -20px;
+    animation-delay: 1.5s;
+  }
+
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+
+  .card-title {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.9rem;
+  }
+
+  .card-subtitle {
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Section Styles */
+  .features-section {
+    padding: 5rem 0;
+    background: white;
+  }
+
+  .plans-section {
+    padding: 5rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  }
+
+  .testimonials-section {
+    padding: 5rem 0;
+    background: white;
+  }
+
+  .final-cta {
+    padding: 5rem 0;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+    text-align: center;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .section-badge {
+    display: inline-block;
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .section-header h2 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .section-header h2 span {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .section-description {
+    font-size: 1.2rem;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Features Grid */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .feature-card {
+    background: white;
+    padding: 2.5rem 2rem;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .feature-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    color: white;
+    font-size: 2rem;
+  }
+
+  .feature-card h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .feature-card p {
+    color: #64748b;
+    line-height: 1.6;
+  }
+
+  /* Plans Grid */
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .plan-card {
+    background: white;
+    border: 2px solid #f1f5f9;
+    border-radius: 20px;
+    padding: 2.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .plan-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+  }
+
+  .plan-card.featured {
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+  }
+
+  .popular-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .plan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+  }
+
+  .plan-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+  }
+
+  .duration-badge {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .plan-price {
+    margin-bottom: 1.5rem;
+  }
+
+  .plan-price .price {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1e293b;
+  }
+
+  .plan-price .period {
+    font-size: 1.2rem;
+    color: #64748b;
+  }
+
+  .plan-description {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .plan-benefits {
+    margin-bottom: 2.5rem;
+  }
+
+  .benefit {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .benefit i {
+    color: #10b981;
+    font-size: 1.1rem;
+  }
+
+  .benefit span {
+    color: #475569;
+  }
+
+  .plan-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .plan-button.primary {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+  }
+
+  .plan-button.secondary {
+    background: #f1f5f9;
+    color: #475569;
+  }
+
+  .plan-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .section-footer {
+    text-align: center;
+  }
+
+  .view-all-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 1rem 2rem;
+    border: 2px solid #3b82f6;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+  }
+
+  .view-all-button:hover {
+    background: #3b82f6;
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  .no-plans {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #f8fafc;
+    border-radius: 20px;
+  }
+
+  .no-plans i {
+    font-size: 3rem;
+    color: #3b82f6;
+    margin-bottom: 1.5rem;
+  }
+
+  .no-plans h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .no-plans p {
+    color: #64748b;
+    font-size: 1.1rem;
+  }
+
+  /* Testimonials */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .testimonial-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+  }
+
+  .testimonial-card.featured {
+    border: 2px solid #3b82f6;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  }
+
+  .featured-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .member-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .member-avatar {
+    position: relative;
+  }
+
+  .member-avatar img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid #f1f5f9;
+  }
+
+  .achievement-badge {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #3b82f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.7rem;
+    border: 2px solid white;
+  }
+
+  .member-details h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+  }
+
+  .member-details p {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .testimonial-content {
+    margin-bottom: 1.5rem;
+  }
+
+  .testimonial-content p {
+    color: #64748b;
+    line-height: 1.7;
+    font-style: italic;
+    position: relative;
+    padding-left: 1rem;
+  }
+
+  .testimonial-content p::before {
+    content: '"';
+    font-size: 3rem;
+    color: #e2e8f0;
+    position: absolute;
+    top: -1rem;
+    left: -0.5rem;
+    font-family: Georgia, serif;
+  }
+
+  .testimonial-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .rating {
+    color: #fbbf24;
+  }
+
+  .verified-badge {
+    font-size: 0.75rem;
+    color: #10b981;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  /* Stats Section */
+  .stats-section {
+    margin-bottom: 4rem;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+  }
+
+  .stat-card {
+    background: #f8fafc;
+    padding: 2rem;
+    border-radius: 16px;
+    text-align: center;
+  }
+
+  .stat-card .stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-card .stat-label {
+    color: #64748b;
+    font-size: 1rem;
+    opacity: 1;
+  }
+
+  /* Testimonials CTA */
+  .testimonials-cta {
+    text-align: center;
+    padding: 3rem;
+    background: #f8fafc;
+    border-radius: 20px;
+  }
+
+  .testimonials-cta h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .testimonials-cta p {
+    color: #64748b;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Final CTA */
+  .cta-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .cta-content p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .hero-content {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      text-align: center;
+    }
+    
+    .hero-text h1 {
+      font-size: 3rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .home-hero {
+      padding: 3rem 0;
+    }
+    
+    .hero-text h1 {
+      font-size: 2.5rem;
+    }
+    
+    .plans-grid,
+    .testimonials-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .hero-actions,
+    .cta-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .cta-button {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .hero-stats {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .floating-card {
+      position: relative;
+      margin: 1rem 0;
+      animation: none;
+    }
+    
+    .floating-card.equipment,
+    .floating-card.classes {
+      position: relative;
+      top: auto;
+      left: auto;
+      right: auto;
+      bottom: auto;
+    }
+    
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero-text h1 {
+      font-size: 2rem;
+    }
+    
+    .section-header h2 {
+      font-size: 2.5rem;
+    }
+    
+    .plan-card {
+      padding: 2rem;
+    }
+    
+    .features-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add intersection observer for animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    // Observe cards for animation
+    const animatedElements = document.querySelectorAll('.feature-card, .plan-card, .testimonial-card, .stat-card');
+    animatedElements.forEach(element => {
+      element.style.opacity = '0';
+      element.style.transform = 'translateY(20px)';
+      element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(element);
+    });
+  });
+</script>
+{% endblock content %}

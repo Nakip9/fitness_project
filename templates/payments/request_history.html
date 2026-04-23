@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Payment Requests | {{ SITE_NAME }}{% endblock title %}
+
+{% block content %}
+<section class="content-section">
+  <div class="container">
+    <div class="photo-grid mb-5">
+      <div class="photo-frame photo-frame--wide" aria-hidden="true"></div>
+      <div class="photo-frame" aria-hidden="true"></div>
+      <div class="photo-frame photo-frame--accent" aria-hidden="true"></div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-xl-8">
+        <div class="membership-card p-4 p-lg-5">
+          <h1 class="section-heading mb-3">Your payment requests</h1>
+          <p class="lead text-muted">Track the status of your recent callback requests. A JafriFit specialist will connect with you within two hours of each submission.</p>
+          {% if requests %}
+            <div class="table-responsive mt-4">
+              <table class="table table-borderless align-middle table-dark-soft mb-0">
+                <thead>
+                  <tr>
+                    <th scope="col">Membership</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Submitted</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for request in requests %}
+                    <tr>
+                      <td class="fw-semibold">{{ request.plan.name }}</td>
+                      <td>{{ request.phone_number }}</td>
+                      <td>
+                        {% if request.status == "pending" %}
+                          <span class="badge badge-soft text-uppercase">Pending</span>
+                        {% else %}
+                          <span class="badge bg-success text-white text-uppercase">Contacted</span>
+                        {% endif %}
+                      </td>
+                      <td>{{ request.created_at|date:"M d, Y g:i A" }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="alert alert-info mt-4 mb-0">You haven't submitted any callback requests yet. Explore memberships to get started.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

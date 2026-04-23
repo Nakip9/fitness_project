@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Training Hub | {{ SITE_NAME }}{% endblock title %}
+
+{% block content %}
+<section class="memberships-section">
+  <div class="container">
+    <div class="page-header">
+      <h1>My Training Hub</h1>
+      <p class="page-subtitle">Expert 1-on-1 coaching dashboard. Precision protocols, scheduling, and communication.</p>
+    </div>
+
+    {% if memberships %}
+      <div class="memberships-container">
+        {% for membership in memberships %}
+        <div class="membership-card">
+          <div class="membership-header">
+            <div class="plan-info">
+              <h2>{{ membership.plan.name }}</h2>
+              <div class="coach-info">
+                {% if membership.coach %}
+                  <span class="coach-badge"><i class="fas fa-user-tie"></i> Coach: {{ membership.coach.username }}</span>
+                {% else %}
+                  <span class="coach-badge pending"><i class="fas fa-clock"></i> Assigning Architect...</span>
+                {% endif %}
+              </div>
+            </div>
+            <div class="status-controls">
+                <div class="status-badge status-{{ membership.status }}">
+                  {{ membership.get_status_display }}
+                </div>
+                
+                <!-- EXPERT FLOW: STEP 3 - PAYMENT & ACTIVATION -->
+                {% if membership.status == 'APPROVED' %}
+                  <div class="mt-2 text-center">
+                    <button class="btn btn-success btn-sm w-100 fw-bold py-2 shadow-sm" onclick="handleExpertActivation({{ membership.id }}, '{{ membership.plan.name }}', '{{ membership.plan.duration_days }}', '{{ membership.scheduled_start|date:'M d, Y' }}')">
+                      <i class="fas fa-credit-card"></i> PAY & ACTIVATE NOW
+                    </button>
+                    <small class="text-muted d-block mt-1">Slot reserved! Activate to start.</small>
+                  </div>
+                {% endif %}
+            </div>
+          </div>
+
+          <div class="membership-details">
+            {% if membership.status == 'REQUESTED' %}
+                <div class="alert alert-info border-0 rounded-4 mb-3 d-flex align-items-center">
+                    <i class="fas fa-hourglass-start me-3 fs-4"></i>
+                    <div>
+                        <strong>Application Under Review</strong><br>
+                        <small>Your coach is analyzing your goals to assign your precision time slot.</small>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="detail-grid">
+              <!-- Days Remaining / Expiry -->
+              <div class="detail-item {% if membership.status == 'ACTIVE' %}highlight{% endif %}">
+                <div class="detail-icon schedule">
+                  <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="detail-content">
+                  <label>Training Window</label>
+                  {% if membership.status == 'ACTIVE' %}
+                    <span class="detail-value text-primary fw-bold">{{ membership.days_remaining }} DAYS REMAINING</span>
+                    <small class="d-block text-muted">Ends: {{ membership.scheduled_end|date:"M d, Y" }}</small>
+                  {% elif membership.status == 'APPROVED' %}
+                    <span class="detail-value text-success">TIME ASSIGNED</span>
+                    <small class="d-block text-muted">Starts: {{ membership.scheduled_start|date:"M d, Y" }}</small>
+                  {% else %}
+                    <span class="detail-value text-muted">Awaiting Schedule</span>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Lifecycle Actions -->
+              <div class="detail-item">
+                <div class="detail-icon">
+                  <i class="fas fa-sliders-h"></i>
+                </div>
+                <div class="detail-content">
+                  <label>Plan Management</label>
+                  <div class="btn-group-sm mt-1">
+                    {% if membership.status == 'ACTIVE' %}
+                      <a href="{% url 'memberships:update_status' membership.id 'paused' %}" class="btn-status pause">Pause</a>
+                      <a href="{% url 'memberships:update_status' membership.id 'postponed' %}" class="btn-status postpone">Postpone</a>
+                      <a href="{% url 'memberships:update_status' membership.id 'cancelled' %}" class="btn-status cancel" onclick="return confirm('Terminate this protocol?')">Cancel</a>
+                    {% elif membership.status in 'POSTPONED,PAUSED' %}
+                      <a href="{% url 'memberships:update_status' membership.id 'active' %}" class="btn-status resume">Resume</a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interaction: Notebook with Replies -->
+          <div class="interaction-section">
+            <h3 class="section-title"><i class="fas fa-comment-medical"></i> Coach's Notebook & Comms</h3>
+            
+            <div class="notes-container">
+              {% for note in membership.comms_hub.all %}
+                {% if not note.parent %}
+                <div class="note-wrapper mb-3">
+                    <div class="note-bubble {% if note.author == request.user %}user-note{% else %}coach-note{% endif %} {% if note.is_pinned %}priority-note{% endif %}">
+                      <div class="note-header">
+                        <span>{% if note.is_pinned %}<i class="fas fa-thumbtack me-1"></i>{% endif %}{{ note.author.username }}</span>
+                        <span>{{ note.created_at|date:"M d, H:i" }}</span>
+                      </div>
+                      <div class="note-content">{{ note.content }}</div>
+                      <button class="reply-trigger" onclick="toggleReplyForm({{ note.id }})"><i class="fas fa-reply"></i> Reply</button>
+                    </div>
+
+                    <!-- Replies -->
+                    {% for reply in note.replies.all %}
+                    <div class="reply-bubble {% if reply.author == request.user %}user-reply{% else %}coach-reply{% endif %} ms-5 mt-2">
+                        <small class="fw-bold">{{ reply.author.username }}</small>
+                        <p class="mb-0 small">{{ reply.content }}</p>
+                    </div>
+                    {% endfor %}
+
+                    <!-- Reply Form (Hidden) -->
+                    <div id="reply-form-{{ note.id }}" class="ms-5 mt-2" style="display: none;">
+                        <form action="{% url 'memberships:add_note' membership.id %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="parent_id" value="{{ note.id }}">
+                            <div class="input-group input-group-sm">
+                                <input type="text" name="content" class="form-control" placeholder="Write a reply..." required>
+                                <button class="btn btn-primary" type="submit">Send</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+            <!-- New Primary Note Form -->
+            <div class="note-input-area mt-4 pt-3 border-top">
+              <form action="{% url 'memberships:add_note' membership.id %}" method="POST">
+                {% csrf_token %}
+                <div class="input-group">
+                  <textarea name="content" class="form-control" placeholder="Send a message to your coach..." required rows="2"></textarea>
+                  <button class="btn btn-primary px-4" type="submit"><i class="fas fa-paper-plane"></i></button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Audit Trail -->
+            <div class="audit-log-section mt-4 pt-3 border-top">
+                <small class="text-muted fw-bold d-block mb-2">PRECISION AUDIT LOG</small>
+                {% for log in membership.audit_trail.all|slice:":3" %}
+                    <div class="audit-item d-flex justify-content-between small opacity-75">
+                        <span>{{ log.action }}: {{ log.old_state.status|default:"N/A" }} → {{ log.new_state.status|default:"N/A" }}</span>
+                        <span class="text-muted">{{ log.timestamp|date:"M d" }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-icon"><i class="fas fa-fingerprint"></i></div>
+        <h2>No Active Protocols</h2>
+        <p>Apply for a bespoke performance tier to start your journey.</p>
+        <a href="{% url 'memberships:plan_list' %}" class="btn btn-primary btn-lg rounded-pill px-5 shadow">Browse Plans</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- EmailJS Integration for Activation -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="text/javascript">
+  (function() {
+    emailjs.init("oGLVwTeSTDVKa9WPR");
+  })();
+
+  function handleExpertActivation(membershipId, planName, duration, startDate) {
+    if (!confirm('Proceed to activation? An email with full details will be sent.')) return;
+
+    // Prepare EmailJS Data
+    const templateParams = {
+      name: "{{ request.user.username }}",
+      trainee_email: "{{ request.user.email }}",
+      time: new Date().toLocaleString(),
+      message: `PROTOCOL ACTIVATED: ${planName}\nDURATION: ${duration} Days\nSTART DATE: ${startDate}\n\nWelcome to your elite performance protocol.`
+    };
+
+    // Send Email via EmailJS
+    emailjs.send("service_lu2mdga", "template_jwcqh99", templateParams)
+      .then(function() {
+        // Redirect to Django view to handle state change
+        window.location.href = `/memberships/activate/${membershipId}/`;
+      }, function(error) {
+        console.error('Email failed, activating anyway...', error);
+        window.location.href = `/memberships/activate/${membershipId}/`;
+      });
+  }
+
+  function toggleReplyForm(id) {
+    const form = document.getElementById(`reply-form-${id}`);
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  }
+</script>
+
+<style>
+  .memberships-section { padding: 4rem 0; background: #f8fafc; min-height: 80vh; }
+  .page-header { text-align: center; margin-bottom: 4rem; }
+  .page-header h1 { font-size: 2.8rem; font-weight: 800; color: #0f172a; }
+  .page-subtitle { color: #64748b; font-size: 1.2rem; }
+
+  .membership-card { background: white; border-radius: 28px; padding: 2.5rem; margin-bottom: 3rem; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); border: 1px solid #e2e8f0; }
+  .membership-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px dashed #cbd5e1; }
+  
+  .status-badge { padding: 0.6rem 1.4rem; border-radius: 50px; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  .status-ACTIVE { background: #dcfce7; color: #166534; }
+  .status-APPROVED { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+  .status-REQUESTED { background: #fff; border: 1px solid #e2e8f0; color: #64748b; }
+  .status-PAUSED { background: #f1f5f9; color: #475569; }
+
+  .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+  .detail-item { display: flex; align-items: flex-start; gap: 1.2rem; padding: 1.5rem; background: #f8fafc; border-radius: 20px; }
+  .detail-item.highlight { background: #eff6ff; border: 1px solid #dbeafe; }
+  
+  .detail-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: white; background: #64748b; }
+  .detail-icon.schedule { background: #3b82f6; }
+
+  .interaction-section { background: #f8fafc; border-radius: 24px; padding: 2rem; border: 1px solid #e2e8f0; }
+  
+  /* Notes & Replies */
+  .note-bubble { padding: 1.2rem; border-radius: 20px; position: relative; max-width: 85%; }
+  .coach-note { background: white; border: 1px solid #e2e8f0; border-bottom-left-radius: 4px; }
+  .user-note { background: #0f172a; color: white; margin-left: auto; border-bottom-right-radius: 4px; }
+  .priority-note { border-left: 5px solid #3b82f6; }
+  
+  .reply-bubble { background: #f1f5f9; padding: 0.8rem 1rem; border-radius: 15px; max-width: 75%; border-left: 3px solid #cbd5e1; }
+  .coach-reply { background: #ffffff; border-left-color: #3b82f6; }
+  .user-reply { margin-left: auto; background: #1e293b; color: white; }
+
+  .reply-trigger { background: none; border: none; color: #3b82f6; font-size: 0.75rem; font-weight: 700; margin-top: 5px; padding: 0; }
+
+  .btn-status { display: inline-block; padding: 0.5rem 1rem; border-radius: 10px; font-size: 0.8rem; font-weight: 700; text-decoration: none; margin-right: 0.5rem; transition: 0.2s; }
+  .btn-status.pause { background: #e2e8f0; color: #475569; }
+  .btn-status.resume { background: #dcfce7; color: #166534; }
+  .btn-status.cancel { background: #fee2e2; color: #991b1b; }
+  
+  .empty-state { text-align: center; padding: 5rem; background: white; border-radius: 32px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+</style>
+{% endblock content %}
