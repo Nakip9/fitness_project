@@ -182,148 +182,484 @@
 <!-- Testimonials Section -->
 <section class="testimonials-section">
   <div class="container">
+
+    <!-- Section Header -->
     <div class="section-header">
-      <div class="section-badge">Success Stories</div>
-      <h2>Transformations That <span>Inspire Us</span></h2>
-      <p class="section-description">Real members, real results. See how our community is achieving their fitness goals.</p>
+      <div class="section-badge">
+        <i class="fas fa-quote-left me-1"></i> Client Results
+      </div>
+      <h2>Real People. <span>Real Transformations.</span></h2>
+      <p class="section-description">Every story below started with one decision — to invest in themselves. Here's what happened next.</p>
     </div>
 
-    <div class="testimonials-grid">
-      <div class="testimonial-card">
-        <div class="member-info">
-          <div class="member-avatar">
-            <img src="{% static 'img/hisham_1.jpg' %}" alt="Alex Johnson">
-            <div class="achievement-badge">
-              <i class="fas fa-trophy"></i>
+    <!-- Stats Bar -->
+    <div class="t-stats-bar">
+      <div class="t-stat">
+        <span class="t-stat-num">200+</span>
+        <span class="t-stat-lbl">Clients Coached</span>
+      </div>
+      <div class="t-stat-divider"></div>
+      <div class="t-stat">
+        <span class="t-stat-num">4.9<span class="t-stat-small">/5</span></span>
+        <span class="t-stat-lbl">Average Rating</span>
+      </div>
+      <div class="t-stat-divider"></div>
+      <div class="t-stat">
+        <span class="t-stat-num">10+</span>
+        <span class="t-stat-lbl">Years Experience</span>
+      </div>
+      <div class="t-stat-divider"></div>
+      <div class="t-stat">
+        <span class="t-stat-num">1,000+</span>
+        <span class="t-stat-lbl">Sessions Delivered</span>
+      </div>
+    </div>
+
+    <!-- Featured Testimonial (large) -->
+    <div class="t-featured">
+      <div class="t-featured-image">
+        <img src="{% static 'img/sumbol.jpg' %}" alt="Basumbol Ahmed">
+        <div class="t-featured-tag">
+          <i class="fas fa-crown"></i> Client of the Month
+        </div>
+      </div>
+      <div class="t-featured-body">
+        <div class="t-quote-icon"><i class="fas fa-quote-left"></i></div>
+        <p class="t-featured-quote">
+          "I came to Coach Jafri completely lost — no structure, no consistency, and zero confidence in the gym. Within 90 days on the Elite program, I dropped 18 kg, built real muscle, and finally understood how nutrition works for <em>my</em> body. The WhatsApp check-ins kept me accountable every single day. This isn't just a coaching service — it's a complete lifestyle change."
+        </p>
+        <div class="t-featured-meta">
+          <div class="t-stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <div class="t-featured-author">
+            <strong>Basumbol Ahmed</strong>
+            <span>Lost 18 kg · Elite 1-on-1 Coaching · 3 months</span>
+          </div>
+          <span class="t-verified"><i class="fas fa-circle-check"></i> Verified Client</span>
+        </div>
+        <div class="t-result-pills">
+          <span class="t-pill loss"><i class="fas fa-arrow-down"></i> −18 kg</span>
+          <span class="t-pill muscle"><i class="fas fa-dumbbell"></i> +8 kg Muscle</span>
+          <span class="t-pill time"><i class="fas fa-calendar-check"></i> 90 Days</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Three-card grid -->
+    <div class="t-grid">
+
+      <!-- Card 1 -->
+      <div class="t-card">
+        <div class="t-card-header">
+          <div class="t-avatar-wrap">
+            <img src="{% static 'img/hisham_1.jpg' %}" alt="Hesham Kozaman">
+            <div class="t-avatar-badge blue"><i class="fas fa-trophy"></i></div>
+          </div>
+          <div class="t-card-author">
+            <strong>Hesham Kozaman</strong>
+            <span>Starter → Elite · 6 months</span>
+            <div class="t-stars small">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
             </div>
           </div>
-          <div class="member-details">
-            <h4>Kozaman Hesham</h4>
-            <p>Lost 30 lbs • 2 years</p>
-          </div>
         </div>
-        <div class="testimonial-content">
-          <p>"The trainers here are incredible! I've not only lost 30 pounds but gained so much confidence and energy. The personalized approach made all the difference."</p>
+        <div class="t-card-tag orange">Weight Loss</div>
+        <p class="t-card-quote">
+          "I'd tried every diet and gym programme out there. Nothing stuck until I started working with Coach Jafri. The custom plan was built around my schedule and food preferences — I lost 14 kg in 6 months without feeling like I was suffering. The form video reviews alone were worth every penny."
+        </p>
+        <div class="t-card-results">
+          <div class="t-mini-stat"><span>−14 kg</span><label>Lost</label></div>
+          <div class="t-mini-stat"><span>6 mo</span><label>Duration</label></div>
+          <div class="t-mini-stat"><span>100%</span><label>Consistent</label></div>
         </div>
-        <div class="testimonial-footer">
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-          </div>
-          <div class="verified-badge">
-            <i class="fas fa-check-circle"></i>
-            Verified Member
-          </div>
-        </div>
+        <span class="t-verified small"><i class="fas fa-circle-check"></i> Verified Client</span>
       </div>
 
-      <div class="testimonial-card featured">
-        <div class="featured-badge">
-          <i class="fas fa-star"></i>
-          Member of the Month
-        </div>
-        <div class="member-info">
-          <div class="member-avatar">
-            <img src="{% static 'img/sumbol.jpg' %}" alt="Sarah Miller">
-            <div class="achievement-badge">
-              <i class="fas fa-heart"></i>
+      <!-- Card 2 -->
+      <div class="t-card t-card-highlight">
+        <div class="t-card-header">
+          <div class="t-avatar-wrap">
+            <img src="{% static 'img/sarah_girl_2.jpg' %}" alt="Sarah Mukamodova">
+            <div class="t-avatar-badge green"><i class="fas fa-bolt"></i></div>
+          </div>
+          <div class="t-card-author">
+            <strong>Sarah Mukamodova</strong>
+            <span>90-Day Transformation · 3 months</span>
+            <div class="t-stars small">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
             </div>
           </div>
-          <div class="member-details">
-            <h4>Basumbol Ahmed</h4>
-            <p>Marathon Runner • 1 year</p>
-          </div>
         </div>
-        <div class="testimonial-content">
-          <p>"The community support is absolutely amazing. From my first day, everyone was so welcoming. I went from couch to marathon runner in just one year!"</p>
+        <div class="t-card-tag green">Strength & Tone</div>
+        <p class="t-card-quote">
+          "As a busy professional I needed something that fit around my life, not the other way around. The 90-Day package gave me a full roadmap — training, nutrition, and recovery. I doubled my deadlift, dropped two dress sizes, and for the first time I actually enjoy going to the gym. Coach Jafri's feedback is fast, specific, and genuinely motivating."
+        </p>
+        <div class="t-card-results">
+          <div class="t-mini-stat"><span>×2</span><label>Strength</label></div>
+          <div class="t-mini-stat"><span>−2</span><label>Dress Sizes</label></div>
+          <div class="t-mini-stat"><span>90 d</span><label>Program</label></div>
         </div>
-        <div class="testimonial-footer">
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-          </div>
-          <div class="verified-badge">
-            <i class="fas fa-check-circle"></i>
-            Verified Member
-          </div>
-        </div>
+        <span class="t-verified small"><i class="fas fa-circle-check"></i> Verified Client</span>
       </div>
 
-      <div class="testimonial-card">
-        <div class="member-info">
-          <div class="member-avatar">
-            <img src="{% static 'img/sarah_girl_2.jpg' %}" alt="Sarh sarah">
-            <div class="achievement-badge">
-              <i class="fas fa-dumbbell"></i>
+      <!-- Card 3 -->
+      <div class="t-card">
+        <div class="t-card-header">
+          <div class="t-avatar-wrap">
+            <img src="{% static 'img/muslim_girl.jpg' %}" alt="Nadia Rahman">
+            <div class="t-avatar-badge purple"><i class="fas fa-heart"></i></div>
+          </div>
+          <div class="t-card-author">
+            <strong>Nadia Rahman</strong>
+            <span>Starter Coaching · 1 month</span>
+            <div class="t-stars small">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
             </div>
           </div>
-          <div class="member-details">
-            <h4>Sarah Mukamodova</h4>
-            <p>Strength Coach • 6 months</p>
-          </div>
         </div>
-        <div class="testimonial-content">
-          <p>"The online support is a game-changer. As a busy professional, being able to send my form videos and get feedback within hours has helped me double my strength in 6 months!"</p>
+        <div class="t-card-tag purple">Beginner Journey</div>
+        <p class="t-card-quote">
+          "I was nervous to start — I'd never trained properly before. The Starter plan was perfect. Coach Jafri explained everything clearly, the app made tracking simple, and the weekly check-ins kept me on track. In just one month I built habits I know will last a lifetime. Already upgrading to the Elite program!"
+        </p>
+        <div class="t-card-results">
+          <div class="t-mini-stat"><span>−5 kg</span><label>Lost</label></div>
+          <div class="t-mini-stat"><span>30 d</span><label>Program</label></div>
+          <div class="t-mini-stat"><span>↑ Elite</span><label>Upgraded</label></div>
         </div>
-        <div class="testimonial-footer">
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-          </div>
-          <div class="verified-badge">
-            <i class="fas fa-check-circle"></i>
-            Verified Member
-          </div>
-        </div>
+        <span class="t-verified small"><i class="fas fa-circle-check"></i> Verified Client</span>
+      </div>
+
+    </div><!-- /t-grid -->
+
+    <!-- Bottom CTA -->
+    <div class="t-bottom-cta">
+      <p class="t-bottom-label">Ready to write your own story?</p>
+      <div class="cta-actions">
+        <a href="{% url 'memberships:plan_list' %}" class="cta-button primary">
+          <i class="fas fa-bolt"></i> Start Your Journey
+        </a>
+        <a href="{% url 'core:about' %}" class="cta-button secondary">
+          <i class="fas fa-user-tie"></i> Meet the Coach
+        </a>
       </div>
     </div>
 
-    <!-- Stats Section -->
-    <div class="stats-section">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-number">200+</div>
-          <div class="stat-label">Clients Transformed</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">4.9/5</div>
-          <div class="stat-label">Average Rating</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">10+</div>
-          <div class="stat-label">Years Experience</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">1,000+</div>
-          <div class="stat-label">Training Sessions</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Testimonials CTA -->
-<div class="cta-actions">
-    <a href="{% url 'memberships:plan_list' %}" class="cta-button primary" style="background-color: #ff6347;">
-        <i class="fas fa-bolt"></i>
-        Start Your Journey
-    </a>
-    <a href="{% url 'core:about' %}" class="cta-button secondary" style="background-color: #45a049;">
-        <i class="fas fa-play"></i>
-        Watch Stories
-    </a>
-</div>
-
-    </div>
   </div>
 </section>
+
+<style>
+  /* ── Testimonials Section ─────────────────────────────────────── */
+  .testimonials-section {
+    padding: 5rem 0;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 60%, #f1f5f9 100%);
+  }
+
+  /* Stats bar */
+  .t-stats-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    background: white;
+    border-radius: 20px;
+    padding: 1.75rem 2rem;
+    margin-bottom: 3.5rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.07);
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .t-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 2.5rem;
+  }
+  .t-stat-num {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #1e293b;
+    line-height: 1;
+  }
+  .t-stat-small { font-size: 1.1rem; font-weight: 600; color: #64748b; }
+  .t-stat-lbl { font-size: 0.85rem; color: #64748b; margin-top: 0.3rem; font-weight: 500; }
+  .t-stat-divider {
+    width: 1px;
+    height: 40px;
+    background: #e2e8f0;
+    flex-shrink: 0;
+  }
+
+  /* Featured testimonial */
+  .t-featured {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 0;
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.1);
+    margin-bottom: 2.5rem;
+    border: 1px solid rgba(59,130,246,0.12);
+  }
+  .t-featured-image {
+    position: relative;
+    overflow: hidden;
+  }
+  .t-featured-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    min-height: 380px;
+    display: block;
+  }
+  .t-featured-tag {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    padding: 0.45rem 1rem;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    box-shadow: 0 4px 12px rgba(245,158,11,0.4);
+  }
+  .t-featured-body {
+    padding: 2.75rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .t-quote-icon {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1.25rem;
+    line-height: 1;
+  }
+  .t-featured-quote {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: #334155;
+    font-style: italic;
+    margin-bottom: 1.75rem;
+  }
+  .t-featured-meta {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .t-stars { color: #fbbf24; font-size: 1rem; display: flex; gap: 0.2rem; }
+  .t-stars.small { font-size: 0.8rem; }
+  .t-featured-author strong {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1e293b;
+  }
+  .t-featured-author span {
+    font-size: 0.85rem;
+    color: #64748b;
+  }
+  .t-verified {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #10b981;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  .t-verified.small { font-size: 0.78rem; }
+  .t-result-pills {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .t-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+  .t-pill.loss    { background: #fef2f2; color: #dc2626; }
+  .t-pill.muscle  { background: #f0fdf4; color: #16a34a; }
+  .t-pill.time    { background: #eff6ff; color: #2563eb; }
+
+  /* Three-card grid */
+  .t-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+    margin-bottom: 3rem;
+  }
+  .t-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.07);
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .t-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 48px rgba(0,0,0,0.12);
+  }
+  .t-card-highlight {
+    border: 2px solid #3b82f6;
+    background: linear-gradient(160deg, #ffffff 0%, #f8faff 100%);
+  }
+  .t-card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .t-avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+  }
+  .t-avatar-wrap img {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top center;
+    border: 3px solid #f1f5f9;
+  }
+  .t-avatar-badge {
+    position: absolute;
+    bottom: -3px;
+    right: -3px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.6rem;
+    border: 2px solid white;
+  }
+  .t-avatar-badge.blue   { background: #3b82f6; }
+  .t-avatar-badge.green  { background: #10b981; }
+  .t-avatar-badge.purple { background: #8b5cf6; }
+
+  .t-card-author strong {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.15rem;
+  }
+  .t-card-author span {
+    font-size: 0.78rem;
+    color: #64748b;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .t-card-tag {
+    display: inline-block;
+    padding: 0.3rem 0.85rem;
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    align-self: flex-start;
+  }
+  .t-card-tag.orange { background: #fff7ed; color: #c2410c; }
+  .t-card-tag.green  { background: #f0fdf4; color: #15803d; }
+  .t-card-tag.purple { background: #faf5ff; color: #7c3aed; }
+
+  .t-card-quote {
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: #475569;
+    font-style: italic;
+    flex: 1;
+    position: relative;
+    padding-left: 1rem;
+    border-left: 3px solid #e2e8f0;
+    margin: 0;
+  }
+  .t-card-highlight .t-card-quote { border-left-color: #3b82f6; }
+
+  .t-card-results {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 0.85rem;
+  }
+  .t-mini-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+  }
+  .t-mini-stat span {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #1e293b;
+  }
+  .t-mini-stat label {
+    font-size: 0.68rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* Bottom CTA */
+  .t-bottom-cta {
+    text-align: center;
+  }
+  .t-bottom-label {
+    font-size: 1.1rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .t-featured { grid-template-columns: 280px 1fr; }
+    .t-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .t-featured { grid-template-columns: 1fr; }
+    .t-featured-image img { min-height: 260px; max-height: 300px; }
+    .t-featured-body { padding: 2rem 1.75rem; }
+    .t-featured-quote { font-size: 1rem; }
+    .t-grid { grid-template-columns: 1fr; }
+    .t-stats-bar { gap: 0.5rem; }
+    .t-stat { padding: 0.5rem 1.25rem; }
+    .t-stat-divider { display: none; }
+    .t-featured-meta { gap: 1rem; }
+  }
+  @media (max-width: 480px) {
+    .t-featured-body { padding: 1.5rem; }
+    .t-card { padding: 1.5rem; }
+  }
+</style>
 
 <!-- Final CTA Section -->
 <section class="final-cta">

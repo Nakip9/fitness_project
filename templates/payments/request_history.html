@@ -1,55 +1,286 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Payment Requests | {{ SITE_NAME }}{% endblock title %}
+{% block title %}My Requests | {{ SITE_NAME }}{% endblock title %}
 
 {% block content %}
-<section class="content-section">
+<section class="history-section">
   <div class="container">
-    <div class="photo-grid mb-5">
-      <div class="photo-frame photo-frame--wide" aria-hidden="true"></div>
-      <div class="photo-frame" aria-hidden="true"></div>
-      <div class="photo-frame photo-frame--accent" aria-hidden="true"></div>
+
+    <div class="page-header">
+      <h1>Coaching Request History</h1>
+      <p class="page-sub">Track the status of your program enrollment requests. Coach Jafri will contact you within 2 hours of each submission.</p>
     </div>
-    <div class="row justify-content-center">
-      <div class="col-xl-8">
-        <div class="membership-card p-4 p-lg-5">
-          <h1 class="section-heading mb-3">Your payment requests</h1>
-          <p class="lead text-muted">Track the status of your recent callback requests. A JafriFit specialist will connect with you within two hours of each submission.</p>
-          {% if requests %}
-            <div class="table-responsive mt-4">
-              <table class="table table-borderless align-middle table-dark-soft mb-0">
-                <thead>
-                  <tr>
-                    <th scope="col">Membership</th>
-                    <th scope="col">Phone</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Submitted</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for request in requests %}
-                    <tr>
-                      <td class="fw-semibold">{{ request.plan.name }}</td>
-                      <td>{{ request.phone_number }}</td>
-                      <td>
-                        {% if request.status == "pending" %}
-                          <span class="badge badge-soft text-uppercase">Pending</span>
-                        {% else %}
-                          <span class="badge bg-success text-white text-uppercase">Contacted</span>
-                        {% endif %}
-                      </td>
-                      <td>{{ request.created_at|date:"M d, Y g:i A" }}</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
+
+    {% if requests %}
+    <div class="requests-list">
+      {% for req in requests %}
+      <div class="request-card">
+        <div class="req-left">
+          <div class="req-icon">
+            <i class="fas fa-dumbbell"></i>
+          </div>
+          <div class="req-info">
+            <h3>{{ req.plan.name }}</h3>
+            <p class="req-phone"><i class="fas fa-phone me-1"></i>{{ req.phone_number }}</p>
+            <p class="req-date"><i class="fas fa-calendar me-1"></i>{{ req.created_at|date:"F d, Y" }} at {{ req.created_at|time:"g:i A" }}</p>
+          </div>
+        </div>
+        <div class="req-right">
+          <div class="req-price">${{ req.plan.price }}</div>
+          {% if req.status == "pending" %}
+          <span class="req-status pending">
+            <i class="fas fa-hourglass-half"></i>Pending
+          </span>
           {% else %}
-            <div class="alert alert-info mt-4 mb-0">You haven't submitted any callback requests yet. Explore memberships to get started.</div>
+          <span class="req-status contacted">
+            <i class="fas fa-check-circle"></i>Contacted
+          </span>
           {% endif %}
         </div>
       </div>
+      {% endfor %}
     </div>
+
+    <div class="history-footer">
+      <p class="footer-note">
+        <i class="fas fa-info-circle me-2"></i>
+        Pending requests will be followed up within 2 hours. If you haven't heard back, please <a href="{% url 'core:contact' %}">contact us</a>.
+      </p>
+    </div>
+
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-receipt"></i>
+      </div>
+      <h2>No Requests Yet</h2>
+      <p>You haven't submitted any coaching program requests. Browse our programs and get started today!</p>
+      <div class="empty-actions">
+        <a href="{% url 'memberships:plan_list' %}" class="cta-btn primary">
+          <i class="fas fa-dumbbell"></i>Browse Programs
+        </a>
+        <a href="{% url 'core:contact' %}" class="cta-btn secondary">
+          <i class="fas fa-comment"></i>Ask a Question
+        </a>
+      </div>
+    </div>
+    {% endif %}
+
   </div>
 </section>
+
+<style>
+  .history-section {
+    padding: 3rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    min-height: 80vh;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  .page-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .page-sub {
+    font-size: 1.1rem;
+    color: #64748b;
+    max-width: 550px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .requests-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+  }
+
+  .request-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.75rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+  }
+  .request-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.1);
+  }
+
+  .req-left {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .req-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .req-info h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.3rem;
+  }
+  .req-phone, .req-date {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0.2rem 0;
+  }
+
+  .req-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+  .req-price {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #1e293b;
+  }
+  .req-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .req-status.pending {
+    background: #fef9c3;
+    color: #854d0e;
+  }
+  .req-status.contacted {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .history-footer {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .footer-note {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    color: #64748b;
+    font-size: 0.9rem;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+  }
+  .footer-note a {
+    color: #3b82f6;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .footer-note a:hover { text-decoration: underline; }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    background: white;
+    border-radius: 20px;
+    padding: 4rem 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+  }
+  .empty-icon {
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2.2rem;
+    margin: 0 auto 2rem;
+  }
+  .empty-state h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+  .empty-state p {
+    color: #64748b;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  .empty-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1.75rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  .cta-btn.primary {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+  }
+  .cta-btn.secondary {
+    background: transparent;
+    color: #3b82f6;
+    border: 2px solid #3b82f6;
+  }
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  }
+
+  @media (max-width: 640px) {
+    .request-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .req-right {
+      align-items: flex-start;
+      flex-direction: row;
+      align-items: center;
+      gap: 1rem;
+    }
+    .empty-actions { flex-direction: column; align-items: center; }
+    .cta-btn { width: 100%; justify-content: center; }
+  }
+</style>
 {% endblock content %}

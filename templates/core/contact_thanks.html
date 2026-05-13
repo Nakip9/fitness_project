@@ -4,317 +4,327 @@
 {% block title %}Thank You | {{ SITE_NAME }}{% endblock title %}
 
 {% block content %}
-<section class="content-section">
+<section class="thanks-section">
   <div class="container">
-    <!-- Animated Confirmation Icon -->
-    <div class="row justify-content-center mb-5">
-      <div class="col-lg-8 text-center">
-        <div class="confirmation-animation mb-4">
-          <div class="confirmation-circle">
-            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-              <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
-              <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-            </svg>
-          </div>
+
+    <!-- Animated Check -->
+    <div class="check-wrap">
+      <div class="check-circle">
+        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+          <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+          <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Confirmation Card -->
+    <div class="confirm-card">
+      <span class="confirm-badge">
+        <i class="fas fa-check-circle me-2"></i>Message Received
+      </span>
+      <h1>Thank You for Reaching Out!</h1>
+      <p class="confirm-lead">Your message has been received. Coach Jafri will personally respond within 24 hours to discuss your goals and how we can help you transform.</p>
+
+      <div class="confirm-stats">
+        <div class="cstat">
+          <i class="fas fa-clock"></i>
+          <strong>24h</strong>
+          <span>Response Time</span>
+        </div>
+        <div class="cstat">
+          <i class="fas fa-users"></i>
+          <strong>200+</strong>
+          <span>Clients Coached</span>
+        </div>
+        <div class="cstat">
+          <i class="fas fa-star"></i>
+          <strong>4.9/5</strong>
+          <span>Client Rating</span>
         </div>
       </div>
     </div>
 
-    <!-- Main Confirmation Card -->
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="confirmation-card text-center position-relative overflow-hidden">
-          <!-- Background Pattern -->
-          <div class="position-absolute top-0 start-0 w-100 h-100" style="opacity: 0.05;">
-            <div class="w-100 h-100" style="background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"gym\" width=\"100\" height=\"100\" patternUnits=\"userSpaceOnUse\"><circle cx=\"50\" cy=\"50\" r=\"2\" fill=\"white\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23gym)\"/></svg>')"></div>
+    <!-- Next Steps -->
+    <div class="next-steps">
+      <h2>While You Wait…</h2>
+      <p class="next-sub">Explore everything {{ SITE_NAME }} has to offer</p>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-icon" style="background: linear-gradient(135deg,#3b82f6,#2563eb);">
+            <i class="fas fa-crown"></i>
           </div>
-          
-          <div class="position-relative z-1">
-            <span class="badge-soft badge-lg text-uppercase d-inline-flex align-items-center mb-3">
-              <i class="fas fa-check-circle me-2"></i>Message Received Successfully
-            </span>
-            
-            <h1 class="section-heading mt-2 mb-3 text-white">Thank You for Reaching Out!</h1>
-            
-            <p class="lead mb-4 text-white opacity-90">We've received your message and our team will get back to you within 24 hours. While you wait, explore everything {{ SITE_NAME }} has to offer.</p>
-            
-            <!-- Quick Stats -->
-            <div class="row g-3 mb-4">
-              <div class="col-md-4">
-                <div class="stat-card p-3 rounded-3">
-                  <i class="fas fa-clock fa-2x text-primary mb-2"></i>
-                  <h4 class="fw-bold text-white mb-1">24h</h4>
-                  <p class="small mb-0 text-white opacity-75">Response Time</p>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="stat-card p-3 rounded-3">
-                  <i class="fas fa-users fa-2x text-success mb-2"></i>
-                  <h4 class="fw-bold text-white mb-1">500+</h4>
-                  <p class="small mb-0 text-white opacity-75">Happy Members</p>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="stat-card p-3 rounded-3">
-                  <i class="fas fa-star fa-2x text-warning mb-2"></i>
-                  <h4 class="fw-bold text-white mb-1">4.9/5</h4>
-                  <p class="small mb-0 text-white opacity-75">Member Rating</p>
-                </div>
-              </div>
-            </div>
+          <h3>Coaching Programs</h3>
+          <p>Browse our science-backed training packages designed for every level and goal.</p>
+          <a href="{% url 'memberships:plan_list' %}" class="step-link">
+            <i class="fas fa-arrow-right me-1"></i>View Programs
+          </a>
+        </div>
+
+        <div class="step-card">
+          <div class="step-icon" style="background: linear-gradient(135deg,#10b981,#059669);">
+            <i class="fas fa-user-tie"></i>
           </div>
+          <h3>Meet Your Coach</h3>
+          <p>Learn about Coach Jafri's background, certifications, and coaching philosophy.</p>
+          <a href="{% url 'core:about' %}" class="step-link">
+            <i class="fas fa-arrow-right me-1"></i>About Coach
+          </a>
+        </div>
+
+        <div class="step-card">
+          <div class="step-icon" style="background: linear-gradient(135deg,#f97316,#ea580c);">
+            <i class="fas fa-rocket"></i>
+          </div>
+          <h3>Start Today</h3>
+          <p>Create your free account and get instant access to your personalized dashboard.</p>
+          <a href="{% url 'accounts:register' %}" class="step-link">
+            <i class="fas fa-arrow-right me-1"></i>Join Free
+          </a>
         </div>
       </div>
     </div>
 
-    <!-- Next Steps Section -->
-    <div class="row justify-content-center mt-5">
-      <div class="col-lg-10">
-        <div class="text-center mb-4">
-          <h3 class="fw-bold mb-3">What's Next?</h3>
-          <p class="text-muted">Explore our facilities and get ready for your fitness journey</p>
-        </div>
-        
-        <div class="row g-4">
-          <div class="col-md-4">
-            <div class="card-modern text-center p-4 h-100">
-              <div class="bg-primary rounded-3 p-3 mb-3 d-inline-flex">
-                <i class="fas fa-crown fa-2x text-white"></i>
-              </div>
-              <h4 class="fw-bold mb-3">Memberships</h4>
-              <p class="text-muted mb-3">Discover flexible membership options tailored to your fitness goals and schedule.</p>
-              <a href="{% url 'memberships:plan_list' %}" class="btn btn-outline-primary w-100">
-                <i class="fas fa-arrow-right me-2"></i>View Plans
-              </a>
-            </div>
-          </div>
-          
-          <div class="col-md-4">
-            <div class="card-modern text-center p-4 h-100">
-              <div class="bg-success rounded-3 p-3 mb-3 d-inline-flex">
-                <i class="fas fa-calendar-alt fa-2x text-white"></i>
-              </div>
-              <h4 class="fw-bold mb-3">Class Schedule</h4>
-              <p class="text-muted mb-3">Browse our diverse class offerings from yoga to high-intensity interval training.</p>
-              {% comment %} <a href="{% url 'schedules:schedule' %}" class="btn btn-outline-success w-100"> {% endcomment %}
-                <i class="fas fa-arrow-right me-2"></i>View Schedule
-              </a>
-            </div>
-          </div>
-          
-          <div class="col-md-4">
-            <div class="card-modern text-center p-4 h-100">
-              <div class="bg-warning rounded-3 p-3 mb-3 d-inline-flex">
-                <i class="fas fa-dumbbell fa-2x text-white"></i>
-              </div>
-              <h4 class="fw-bold mb-3">Facility Tour</h4>
-              <p class="text-muted mb-3">Take a virtual tour of our state-of-the-art facilities and premium equipment.</p>
-              <a href="{% url 'core:about' %}" class="btn btn-outline-warning w-100">
-                <i class="fas fa-arrow-right me-2"></i>Take Tour
-              </a>
-            </div>
-          </div>
-        </div>
+    <!-- Final CTA -->
+    <div class="final-cta-wrap">
+      <h3>Ready to Begin Your Transformation?</h3>
+      <p>Join hundreds of clients who have already changed their lives with personalized coaching.</p>
+      <div class="cta-btns">
+        <a href="{% url 'memberships:plan_list' %}" class="cta-btn primary">
+          <i class="fas fa-bolt"></i>Explore Programs
+        </a>
+        <a href="{% url 'core:about' %}" class="cta-btn secondary">
+          <i class="fas fa-play"></i>Meet the Coach
+        </a>
       </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="row justify-content-center mt-5">
-      <div class="col-lg-8 text-center">
-        <div class="card-modern p-4">
-          <h4 class="fw-bold mb-3">Ready to Get Started?</h4>
-          <p class="text-muted mb-4">Join our community of fitness enthusiasts and start your transformation today.</p>
-          <div class="d-flex flex-wrap justify-content-center gap-3">
-            <a class="btn btn-gradient btn-lg px-4" href="{% url 'memberships:plan_list' %}">
-              <i class="fas fa-bolt me-2"></i>Explore Memberships
-            </a>
-              {% comment %} <a class="btn btn-outline-primary btn-lg px-4" href="{% url 'schedules:schedule' %}"> {% endcomment %}
-              <i class="fas fa-calendar me-2"></i>View Classes
-            </a>
-            <a class="btn btn-outline-success btn-lg px-4" href="{% url 'core:about' %}">
-              <i class="fas fa-play me-2"></i>Watch Tour
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
 <style>
-  .confirmation-animation {
+  .thanks-section {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    min-height: 80vh;
+  }
+
+  /* Check animation */
+  .check-wrap {
     display: flex;
     justify-content: center;
-    align-items: center;
+    margin-bottom: 2.5rem;
   }
-  
-  .confirmation-circle {
-    width: 120px;
-    height: 120px;
+  .check-circle {
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
     background: linear-gradient(135deg, #3b82f6, #10b981);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
-    animation: pulse 2s infinite;
+    box-shadow: 0 20px 40px rgba(59,130,246,0.3);
+    animation: pulse 2.5s infinite;
   }
-  
-  .checkmark {
-    width: 60px;
-    height: 60px;
-  }
-  
+  .checkmark { width: 55px; height: 55px; }
   .checkmark__circle {
-    stroke-dasharray: 166;
-    stroke-dashoffset: 166;
-    stroke-width: 2;
-    stroke-miterlimit: 10;
-    stroke: #ffffff;
-    fill: none;
-    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    stroke-dasharray: 166; stroke-dashoffset: 166;
+    stroke-width: 2; stroke: #fff; fill: none;
+    animation: stroke 0.6s cubic-bezier(0.65,0,0.45,1) forwards;
   }
-  
   .checkmark__check {
-    transform-origin: 50% 50%;
-    stroke-dasharray: 48;
-    stroke-dashoffset: 48;
-    stroke: #ffffff;
-    stroke-width: 3;
-    stroke-linecap: round;
-    stroke-miterlimit: 10;
-    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+    stroke-dasharray: 48; stroke-dashoffset: 48;
+    stroke: #fff; stroke-width: 3; stroke-linecap: round;
+    animation: stroke 0.3s cubic-bezier(0.65,0,0.45,1) 0.8s forwards;
   }
-  
-  @keyframes stroke {
-    100% {
-      stroke-dashoffset: 0;
-    }
-  }
-  
+  @keyframes stroke { 100% { stroke-dashoffset: 0; } }
   @keyframes pulse {
-    0% {
-      transform: scale(1);
-      box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
-    }
-    50% {
-      transform: scale(1.05);
-      box-shadow: 0 25px 50px rgba(59, 130, 246, 0.4);
-    }
-    100% {
-      transform: scale(1);
-      box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
-    }
+    0%,100% { transform: scale(1); box-shadow: 0 20px 40px rgba(59,130,246,0.3); }
+    50% { transform: scale(1.05); box-shadow: 0 25px 50px rgba(59,130,246,0.4); }
   }
-  
-  .confirmation-card {
-    background: linear-gradient(135deg, #3b82f6, #10b981, #f97316);
+
+  /* Confirm card */
+  .confirm-card {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
     border-radius: 24px;
-    padding: 4rem 3rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 30px 60px rgba(59, 130, 246, 0.25);
+    padding: 3.5rem 3rem;
+    text-align: center;
+    color: white;
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    box-shadow: 0 30px 60px rgba(59,130,246,0.25);
   }
-  
-  .badge-lg {
-    padding: 0.75rem 1.5rem;
+  .confirm-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255,255,255,0.2);
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
     font-size: 0.85rem;
     font-weight: 600;
+    margin-bottom: 1.5rem;
   }
-  
-  .stat-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: transform 0.3s ease;
-  }
-  
-  .stat-card:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.15);
-  }
-  
-  .section-heading {
-    font-size: clamp(2rem, 4vw, 3rem);
+  .confirm-card h1 {
+    font-size: 2.2rem;
     font-weight: 800;
+    margin-bottom: 1rem;
   }
-  
-  .btn-gradient {
-    background: linear-gradient(135deg, #3b82f6, #10b981);
-    border: none;
-    border-radius: 12px;
+  .confirm-lead {
+    font-size: 1.1rem;
+    opacity: 0.95;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .confirm-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .cstat {
+    background: rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 1.25rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .cstat i { font-size: 1.5rem; opacity: 0.9; }
+  .cstat strong { font-size: 1.5rem; font-weight: 800; }
+  .cstat span { font-size: 0.85rem; opacity: 0.85; }
+
+  /* Next steps */
+  .next-steps {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  .next-steps h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+  .next-sub {
+    color: #64748b;
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+  }
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+  .step-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+  }
+  .step-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+  }
+  .step-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.8rem;
+    margin: 0 auto 1.5rem;
+  }
+  .step-card h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+  }
+  .step-card p {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  .step-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #3b82f6;
     font-weight: 600;
-    padding: 0.75rem 2rem;
+    text-decoration: none;
+    padding: 0.6rem 1.25rem;
+    border: 2px solid #3b82f6;
+    border-radius: 50px;
     transition: all 0.3s ease;
   }
-  
-  .btn-gradient:hover {
+  .step-link:hover {
+    background: #3b82f6;
+    color: white;
     transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(59, 130, 246, 0.4);
   }
-  
-  .btn-outline-primary,
-  .btn-outline-success,
-  .btn-outline-warning {
-    border-radius: 12px;
-    font-weight: 500;
+
+  /* Final CTA */
+  .final-cta-wrap {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+  }
+  .final-cta-wrap h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+  }
+  .final-cta-wrap p {
+    color: #64748b;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+  .cta-btns {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
     transition: all 0.3s ease;
   }
-  
-  .btn-outline-primary:hover,
-  .btn-outline-success:hover,
-  .btn-outline-warning:hover {
-    transform: translateY(-2px);
+  .cta-btn.primary {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
   }
-  
+  .cta-btn.secondary {
+    background: transparent;
+    color: #3b82f6;
+    border: 2px solid #3b82f6;
+  }
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  }
+
   @media (max-width: 768px) {
-    .confirmation-card {
-      padding: 3rem 2rem;
-    }
-    
-    .confirmation-circle {
-      width: 100px;
-      height: 100px;
-    }
-    
-    .checkmark {
-      width: 50px;
-      height: 50px;
-    }
+    .confirm-card { padding: 2.5rem 1.5rem; }
+    .confirm-card h1 { font-size: 1.75rem; }
+    .confirm-stats { grid-template-columns: 1fr; gap: 1rem; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .cta-btns { flex-direction: column; align-items: center; }
+    .cta-btn { width: 100%; justify-content: center; }
   }
 </style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Add scroll animations
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver(function(entries) {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translateY(0)';
-        }
-      });
-    }, observerOptions);
-    
-    // Animate cards
-    document.querySelectorAll('.card-modern').forEach(card => {
-      card.style.opacity = '0';
-      card.style.transform = 'translateY(20px)';
-      card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-      observer.observe(card);
-    });
-    
-    // Animate stats
-    document.querySelectorAll('.stat-card').forEach(stat => {
-      stat.style.opacity = '0';
-      stat.style.transform = 'translateY(20px)';
-      stat.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-      observer.observe(stat);
-    });
-  });
-</script>
 {% endblock content %}

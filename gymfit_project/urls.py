@@ -3,6 +3,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+# ── Admin branding ────────────────────────────────────────────────────────────
+admin.site.site_header = getattr(settings, "ADMIN_SITE_HEADER", "Coach Jafri PT — Admin")
+admin.site.site_title = getattr(settings, "ADMIN_SITE_TITLE", "Coach Jafri PT")
+admin.site.index_title = getattr(settings, "ADMIN_INDEX_TITLE", "Coaching Dashboard")
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),

@@ -110,6 +110,11 @@ STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY", "")
 
 SITE_NAME = os.getenv("SITE_NAME", "Coach Jafri PT")
 SITE_TAGLINE = os.getenv("SITE_TAGLINE", "Personalized Training. Proven Results. Your Journey Starts Here.")
+
+# ── Django Admin Branding ──────────────────────────────────────────────────────
+ADMIN_SITE_HEADER = "Coach Jafri PT — Admin"
+ADMIN_SITE_TITLE = "Coach Jafri PT"
+ADMIN_INDEX_TITLE = "Coaching Dashboard"
 STORAGES = {
     'default': {
         'BACKEND': 'django.core.files.storage.FileSystemStorage',

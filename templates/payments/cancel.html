@@ -1,25 +1,99 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Payment Cancelled | {{ SITE_NAME }}{% endblock title %}
 
 {% block content %}
-<section class="content-section content-section--panel">
+<section class="result-section">
   <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-6">
-        <div class="photo-stack mb-3">
-          <div class="photo-frame photo-frame--warm" aria-hidden="true"></div>
-          <div class="photo-frame" aria-hidden="true"></div>
-        </div>
-        <p class="photo-note text-center mb-4">Add lifestyle images to reassure members</p>
-        <div class="membership-card p-4 text-center">
-          <div class="display-3 text-warning mb-3"><i class="fa-solid fa-circle-exclamation"></i></div>
-          <h2 class="fw-semibold">Payment cancelled</h2>
-          <p class="mb-4">Your membership hasn't been activated yet. You can restart the payment process when you're ready.</p>
-          <a class="btn btn-primary" href="{%url 'memberships:plan_list' %}">Return to Memberships</a>
-        </div>
+    <div class="result-card cancel">
+      <div class="result-icon">
+        <i class="fas fa-circle-exclamation"></i>
+      </div>
+      <h1>Payment Cancelled</h1>
+      <p class="result-lead">
+        No worries — your program hasn't been activated yet. You can restart the process whenever you're ready. We're here to help!
+      </p>
+      <div class="result-actions">
+        <a href="{% url 'memberships:plan_list' %}" class="res-btn primary">
+          <i class="fas fa-dumbbell"></i>Browse Programs
+        </a>
+        <a href="{% url 'core:contact' %}" class="res-btn secondary">
+          <i class="fas fa-comment"></i>Need Help?
+        </a>
       </div>
     </div>
   </div>
 </section>
+
+<style>
+  .result-section {
+    padding: 5rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+  }
+  .result-card {
+    background: white;
+    border-radius: 24px;
+    padding: 4rem 3rem;
+    text-align: center;
+    max-width: 560px;
+    margin: 0 auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+  }
+  .result-card.cancel { border-top: 6px solid #f59e0b; }
+  .result-icon {
+    font-size: 4rem;
+    color: #f59e0b;
+    margin-bottom: 1.5rem;
+  }
+  .result-card h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+  .result-lead {
+    font-size: 1.1rem;
+    color: #64748b;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+  .result-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .res-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1.75rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  .res-btn.primary {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+  }
+  .res-btn.secondary {
+    background: transparent;
+    color: #3b82f6;
+    border: 2px solid #3b82f6;
+  }
+  .res-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  }
+  @media (max-width: 640px) {
+    .result-card { padding: 3rem 1.5rem; }
+    .result-actions { flex-direction: column; }
+    .res-btn { width: 100%; justify-content: center; }
+  }
+</style>
 {% endblock content %}
