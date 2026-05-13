@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Scheduled - {{ site_name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .content {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 0 0 8px 8px;
+        }
+        .session-details {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+        }
+        .coach-info {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 14px;
+        }
+        .calendar-icon {
+            color: #3498db;
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>{{ site_name }}</h1>
+        <h2>Training Session Scheduled</h2>
+    </div>
+    
+    <div class="content">
+        <div class="calendar-icon">📅</div>
+        
+        <h2>Your session is confirmed!</h2>
+        <p>Hello {{ user.first_name|default:user.username }}, your training session has been scheduled.</p>
+        
+        <div class="session-details">
+            <h3>Session Details</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Date:</strong></td>
+                    <td style="padding: 8px 0; border-bottom: 1px solid #eee;">{{ session.scheduled_start|date:"l, F d, Y" }}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Time:</strong></td>
+                    <td style="padding: 8px 0; border-bottom: 1px solid #eee;">{{ session.scheduled_start|time:"g:i A" }} - {{ session.scheduled_end|time:"g:i A" }}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Duration:</strong></td>
+                    <td style="padding: 8px 0; border-bottom: 1px solid #eee;">{{ session.duration_minutes }} minutes</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0;"><strong>Plan:</strong></td>
+                    <td style="padding: 8px 0;">{{ membership.plan.name }}</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="coach-info">
+            <h3>Your Coach</h3>
+            <p><strong>{{ coach.full_name }}</strong></p>
+            {% if coach.specialization %}
+            <p><em>{{ coach.specialization }}</em></p>
+            {% endif %}
+            {% if coach.bio %}
+            <p>{{ coach.bio|truncatewords:30 }}</p>
+            {% endif %}
+        </div>
+        
+        {% if session.session_notes %}
+        <div class="session-details">
+            <h3>Session Notes</h3>
+            <p>{{ session.session_notes }}</p>
+        </div>
+        {% endif %}
+        
+        <div style="background-color: #e8f4fd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3>Preparation Tips</h3>
+            <ul>
+                <li>Arrive 5-10 minutes early to warm up</li>
+                <li>Bring a water bottle and towel</li>
+                <li>Wear comfortable workout clothes and proper footwear</li>
+                <li>Let your coach know about any injuries or concerns</li>
+            </ul>
+        </div>
+        
+        <p style="text-align: center;">
+            <a href="#" class="button">View in Dashboard</a>
+        </p>
+        
+        <p>If you need to reschedule or have any questions, please contact us as soon as possible.</p>
+        
+        <p>We look forward to seeing you at your training session!</p>
+    </div>
+    
+    <div class="footer">
+        <p>{{ site_name }}<br>
+        This email was sent to {{ user.email }}<br>
+        <a href="#">Contact Support</a></p>
+    </div>
+</body>
+</html>

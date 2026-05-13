@@ -1,0 +1,35 @@
+{{ site_name }} - Payment Confirmation
+
+Thank you, {{ user.first_name|default:user.username }}!
+
+Your payment has been successfully processed and your membership is now active.
+
+PAYMENT DETAILS
+===============
+Plan: {{ plan.name }}
+Amount Paid: {{ currency }} {{ amount_paid }}
+Payment Date: {{ payment_date|date:"F d, Y" }}
+Payment ID: #{{ payment.id }}
+
+YOUR MEMBERSHIP
+===============
+{{ plan.name }}
+{{ plan.description }}
+
+Start Date: {{ membership_start|date:"F d, Y" }}
+End Date: {{ membership_end|date:"F d, Y" }}
+Days Remaining: {{ days_remaining }} days
+
+WHAT'S NEXT?
+============
+1. Schedule Your Sessions: Your coach will contact you within 24 hours to schedule your training sessions.
+2. Access Your Dashboard: Log in to your account to view your membership details and upcoming sessions.
+3. Prepare for Training: Make sure you have comfortable workout clothes and any specific equipment mentioned in your plan.
+
+If you have any questions about your membership or need assistance, please don't hesitate to contact us.
+
+Welcome to {{ site_name }}! We're excited to help you achieve your fitness goals.
+
+---
+{{ site_name }}
+This email was sent to {{ user.email }}
