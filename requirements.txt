@@ -2,7 +2,6 @@ asgiref==3.10.0
 certifi==2025.10.5
 charset-normalizer==3.4.4
 Django==4.2.25
-django-jazzmin==3.0.1
 idna==3.11
 pillow==12.0.0
 python-dotenv==1.1.1
@@ -11,3 +10,7 @@ sqlparse==0.5.3
 stripe==13.0.1
 typing_extensions==4.15.0
 urllib3==2.5.0
+gunicorn==23.0.0
+whitenoise==6.9.0
+dj-database-url==2.3.0
+psycopg2-binary==2.9.10

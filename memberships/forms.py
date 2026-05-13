@@ -1,19 +1,32 @@
 from django import forms
-from .models import TrainingPlan
+
+from .models import MembershipPlan
+
 
 class MembershipContactForm(forms.Form):
-    # This form is now used for the initial Application/Request
     plan = forms.ModelChoiceField(
-        queryset=TrainingPlan.objects.all(),
-        widget=forms.HiddenInput()
+        queryset=MembershipPlan.objects.none(),
+        widget=forms.RadioSelect(attrs={"class": "d-none"}),
+        empty_label=None,
     )
-    goals = forms.CharField(
-        widget=forms.Textarea(attrs={"class": "form-control", "rows": 4, "placeholder": "What are your specific performance goals?"}),
-        required=True,
-        label="Training Goals"
+    phone_number = forms.CharField(
+        max_length=32,
+        label="Phone number",
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control form-control-lg",
+                "placeholder": "e.g. +1 555 123 4567",
+                "autocomplete": "tel",
+            }
+        ),
     )
-    preferred_times = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "e.g. Mon/Wed/Fri mornings"}),
-        required=False,
-        label="Preferred Availability"
-    )
+
+    def __init__(self, *args, **kwargs):
+        plans = kwargs.pop("plans", None)
+        initial_plan = kwargs.pop("initial_plan", None)
+        super().__init__(*args, **kwargs)
+        if plans is None:
+            plans = MembershipPlan.objects.filter(is_active=True)
+        self.fields["plan"].queryset = plans
+        if initial_plan is not None:
+            self.initial.setdefault("plan", initial_plan)

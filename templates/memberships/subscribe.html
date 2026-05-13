@@ -1,97 +1,791 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Activate {{ plan.name }} | {{ SITE_NAME }}{% endblock title %}
+{% block title %}Subscribe | {{ plan.name }}{% endblock title %}
 
 {% block content %}
-<section class="subscribe-section py-5">
+<section class="subscribe-section">
   <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-8 col-lg-6">
-        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
-          <div class="card-header bg-primary text-white text-center py-4">
-            <h2 class="h4 mb-0">Instant Protocol Activation</h2>
-            <p class="small mb-0 opacity-75">Bespoke 1-on-1 Performance Architecture</p>
+    <div class="subscribe-container">
+      <!-- Header -->
+      <div class="subscribe-header">
+        <div class="progress-steps">
+          <div class="step active">
+            <div class="step-number">1</div>
+            <div class="step-label">Choose Program</div>
           </div>
-          <div class="card-body p-4 p-md-5">
-            <div class="plan-summary mb-4 p-3 bg-light rounded-3 border-start border-4 border-primary">
-              <h3 class="h5 fw-bold">{{ plan.name }}</h3>
-              <p class="text-muted small mb-0">{{ plan.description }}</p>
-              <hr>
-              <div class="d-flex justify-content-between">
-                <span class="text-muted">Duration:</span>
-                <span class="fw-bold">{{ plan.duration_days }} Days</span>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-label">Contact Info</div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-label">Confirmation</div>
+          </div>
+        </div>
+        <h1>Complete Your Enrollment</h1>
+        <p class="subtitle">Select your coaching package and I'll reach out within 2 hours to design your roadmap to success</p>
+      </div>
+
+      <!-- Main Content -->
+      <div class="subscribe-content">
+        <!-- Plan Selection -->
+        <div class="plan-selection">
+          <h2>Select Your Coaching Program</h2>
+          <p class="selection-description">Choose the level of support and intensity that matches your ambition</p>
+
+          {% if form.non_field_errors %}
+          <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ form.non_field_errors|join:" " }}
+          </div>
+          {% endif %}
+
+          {% if not plans %}
+          <div class="info-message">
+            <i class="fas fa-info-circle"></i>
+            <div>
+              <h4>Plans Coming Soon</h4>
+              <p>We're preparing amazing membership options for you. Please check back soon!</p>
+            </div>
+          </div>
+          {% endif %}
+
+          <form method="post" class="subscribe-form">
+            {% csrf_token %}
+            
+            <div class="plans-grid">
+              {% for option in plans %}
+              <div class="plan-option">
+                <input
+                  type="radio"
+                  name="{{ form.plan.name }}"
+                  value="{{ option.pk }}"
+                  id="id_plan_{{ option.pk }}"
+                  {% if option.pk|stringformat:"s" == selected_plan|stringformat:"s" %}checked{% endif %}
+                  class="plan-input"
+                />
+                <label for="id_plan_{{ option.pk }}" class="plan-card {% if option.pk|stringformat:"s" == selected_plan|stringformat:"s" %}selected{% endif %}">
+                  <div class="plan-badge">{{ option.duration_days }} days</div>
+                  <h3 class="plan-name">{{ option.name }}</h3>
+                  <div class="plan-price">${{ option.price }}</div>
+                  <p class="plan-description">{{ option.description|default:"Advanced performance coaching with direct access and technical reviews." }}</p>
+                  <div class="plan-features">
+                    <div class="feature">
+                      <i class="fas fa-check"></i>
+                      <span>Custom Training Plan</span>
+                    </div>
+                    <div class="feature">
+                      <i class="fas fa-check"></i>
+                      <span>Technical Form Reviews</span>
+                    </div>
+                    <div class="feature">
+                      <i class="fas fa-check"></i>
+                      <span>Priority Support Access</span>
+                    </div>
+                  </div>
+                  <div class="selected-indicator">
+                    <i class="fas fa-check"></i>
+                    Selected
+                  </div>
+                </label>
               </div>
-              <div class="d-flex justify-content-between">
-                <span class="text-muted">Investment:</span>
-                <span class="fw-bold text-primary">${{ plan.price_display }}</span>
+              {% endfor %}
+            </div>
+
+            {% if form.plan.errors %}
+            <div class="field-error">
+              <i class="fas fa-exclamation-triangle"></i>
+              {{ form.plan.errors|striptags }}
+            </div>
+            {% endif %}
+
+            <!-- Phone Number -->
+            <div class="contact-section">
+              <h3>Direct Contact Information</h3>
+              <p>I'll personally call this number within 2 hours to discuss your goals and finalize your setup</p>
+              
+              <div class="phone-input-group">
+                <label for="{{ form.phone_number.id_for_label }}" class="input-label">
+                  <i class="fas fa-mobile-alt"></i>
+                  Phone Number
+                </label>
+                {{ form.phone_number }}
+                {% if form.phone_number.errors %}
+                <div class="field-error">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  {{ form.phone_number.errors|striptags }}
+                </div>
+                {% endif %}
               </div>
             </div>
 
-            <form id="subscribe-form" method="POST" class="needs-validation">
-              {% csrf_token %}
-              <div class="mb-4">
-                <label class="form-label fw-bold">Training Goals</label>
-                <textarea id="user-goals" name="goals" class="form-control" rows="4" placeholder="What are your specific performance goals for this protocol?" required></textarea>
-                <div class="form-text">Your protocol starts immediately upon activation.</div>
-              </div>
+            <!-- Submit Button -->
+            <button type="submit" class="submit-button">
+              <i class="fas fa-paper-plane"></i>
+              Submit & Request Call
+            </button>
+          </form>
+        </div>
 
-              <button type="submit" id="activate-btn" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold py-3 shadow">
-                <i class="fas fa-bolt me-2"></i> ACTIVATE & START COUNTDOWN
-              </button>
-            </form>
+        <!-- Sidebar - Benefits & Support -->
+        <div class="subscribe-sidebar">
+          <div class="benefits-card">
+            <div class="benefits-header">
+              <i class="fas fa-user-check"></i>
+              <h3>The Coaching Edge</h3>
+            </div>
+            <div class="benefits-list">
+              <div class="benefit-item">
+                <i class="fas fa-history"></i>
+                <div>
+                  <strong>Rapid Response</strong>
+                  <span>Direct contact within 2 hours</span>
+                </div>
+              </div>
+              <div class="benefit-item">
+                <i class="fas fa-microscope"></i>
+                <div>
+                  <strong>Science-Based</strong>
+                  <span>Personalized performance assessment</span>
+                </div>
+              </div>
+              <div class="benefit-item">
+                <i class="fas fa-chart-line"></i>
+                <div>
+                  <strong>Proven Results</strong>
+                  <span>Data-driven progress tracking</span>
+                </div>
+              </div>
+              <div class="benefit-item">
+                <i class="fas fa-sync"></i>
+                <div>
+                  <strong>Dynamic Plans</strong>
+                  <span>Programs that evolve with you</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="support-card">
+            <h4>Need Immediate Help?</h4>
+            <p>Our team is ready to assist you right now</p>
+            <div class="support-options">
+              <a href="tel:5551234567" class="support-button">
+                <i class="fas fa-phone"></i>
+                Call Now
+              </a>
+              <a href="{% url 'core:contact' %}" class="support-button secondary">
+                <i class="fas fa-comments"></i>
+                Live Chat
+              </a>
+            </div>
+          </div>
+
+          <div class="guarantee-card">
+            <i class="fas fa-shield-alt"></i>
+            <h4>100% Satisfaction Guarantee</h4>
+            <p>Love your membership or cancel within 30 days for a full refund</p>
           </div>
         </div>
+      </div>
+
+      <!-- Footer Note -->
+      <div class="footer-note">
+        <i class="fas fa-info-circle"></i>
+        <p>A {{ SITE_NAME }} specialist will call you within 2 hours to confirm your membership details and finalize payment securely over the phone.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- EmailJS Integration -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script type="text/javascript">
-  (function() {
-    emailjs.init("oGLVwTeSTDVKa9WPR");
-  })();
+<style>
+  .subscribe-section {
+    padding: 3rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    min-height: 100vh;
+  }
 
-  document.getElementById('subscribe-form').addEventListener('submit', function(event) {
-    event.preventDefault();
+  .subscribe-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Progress Steps */
+  .progress-steps {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem;
+    gap: 2rem;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .step-number {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #e2e8f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #64748b;
+    background: white;
+  }
+
+  .step.active .step-number {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+    border-color: #3b82f6;
+  }
+
+  .step-label {
+    font-size: 0.9rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  .step.active .step-label {
+    color: #3b82f6;
+    font-weight: 600;
+  }
+
+  .subscribe-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .subscribe-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .subscribe-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Plan Selection */
+  .plan-selection {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  .plan-selection h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .selection-description {
+    color: #64748b;
+    margin-bottom: 2rem;
+  }
+
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .plan-option {
+    position: relative;
+  }
+
+  .plan-input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  .plan-card {
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .plan-card:hover {
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .plan-card.selected {
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+  }
+
+  .plan-badge {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .plan-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .plan-price {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .plan-description {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .plan-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .feature {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #475569;
+  }
+
+  .feature i {
+    color: #10b981;
+    font-size: 0.9rem;
+  }
+
+  .selected-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #10b981;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .plan-card.selected .selected-indicator {
+    opacity: 1;
+  }
+
+  /* Contact Section */
+  .contact-section {
+    background: #f8fafc;
+    padding: 2rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+  }
+
+  .contact-section h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .contact-section p {
+    color: #64748b;
+    margin-bottom: 1.5rem;
+  }
+
+  .phone-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .input-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .input-label i {
+    color: #3b82f6;
+  }
+
+  .subscribe-form input[type="text"],
+  .subscribe-form input[type="tel"] {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+  }
+
+  .subscribe-form input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  /* Buttons */
+  .submit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 1.25rem 2rem;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .submit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+  }
+
+  /* Messages */
+  .error-message {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .info-message {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    color: #0369a1;
+    padding: 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .info-message i {
+    font-size: 1.5rem;
+    margin-top: 0.25rem;
+  }
+
+  .info-message h4 {
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+  }
+
+  .field-error {
+    color: #dc2626;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Sidebar */
+  .subscribe-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .benefits-card,
+  .support-card,
+  .guarantee-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .benefits-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .benefits-header i {
+    font-size: 2rem;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .benefits-header h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+  }
+
+  .benefits-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .benefit-item i {
+    width: 40px;
+    height: 40px;
+    background: #f1f5f9;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3b82f6;
+    flex-shrink: 0;
+  }
+
+  .benefit-item strong {
+    display: block;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+  }
+
+  .benefit-item span {
+    font-size: 0.9rem;
+    color: #64748b;
+  }
+
+  .support-card h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .support-card p {
+    color: #64748b;
+    margin-bottom: 1.5rem;
+  }
+
+  .support-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .support-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .support-button {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+  }
+
+  .support-button.secondary {
+    background: transparent;
+    color: #3b82f6;
+    border: 2px solid #3b82f6;
+  }
+
+  .support-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .guarantee-card {
+    text-align: center;
+  }
+
+  .guarantee-card i {
+    font-size: 2.5rem;
+    color: #10b981;
+    margin-bottom: 1rem;
+  }
+
+  .guarantee-card h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .guarantee-card p {
+    color: #64748b;
+    margin: 0;
+  }
+
+  /* Footer Note */
+  .footer-note {
+    background: white;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .footer-note i {
+    color: #3b82f6;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .footer-note p {
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .subscribe-content {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .subscribe-section {
+      padding: 2rem 0;
+    }
     
-    const btn = document.getElementById('activate-btn');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> DISPATCHING PROTOCOL...';
-    btn.disabled = true;
+    .subscribe-header h1 {
+      font-size: 2rem;
+    }
+    
+    .progress-steps {
+      gap: 1rem;
+    }
+    
+    .step-label {
+      font-size: 0.8rem;
+    }
+    
+    .plan-selection {
+      padding: 2rem;
+    }
+    
+    .plans-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .benefits-card,
+    .support-card,
+    .guarantee-card {
+      padding: 1.5rem;
+    }
+  }
 
-    // Calculate dates for Email
-    const startDate = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    const endDate = new Date(new Date().getTime() + ({{ plan.duration_days }} * 24 * 60 * 60 * 1000)).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    const goals = document.getElementById('user-goals').value;
+  @media (max-width: 640px) {
+    .subscribe-header h1 {
+      font-size: 1.75rem;
+    }
+    
+    .plan-selection {
+      padding: 1.5rem;
+    }
+    
+    .plan-card {
+      padding: 1.5rem;
+    }
+    
+    .contact-section {
+      padding: 1.5rem;
+    }
+    
+    .footer-note {
+      padding: 1.25rem;
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+</style>
 
-    // Prepare EmailJS Data matching template_jwcqh99
-    const templateParams = {
-      name: "{{ request.user.username }}",
-      trainee_email: "{{ request.user.email }}",
-      time: new Date().toLocaleString(),
-      message: `PROTOCOL: {{ plan.name }}\nDURATION: {{ plan.duration_days }} Days\nTIMELINE: ${startDate} to ${endDate}\n\nGOALS SUBMITTED:\n${goals}`
-    };
-
-    console.log('Sending EmailJS...', templateParams);
-
-    // Send Email then Submit to Django
-    emailjs.send("service_lu2mdga", "template_jwcqh99", templateParams)
-      .then(function(response) {
-        console.log('EMAIL SUCCESS!', response.status, response.text);
-        document.getElementById('subscribe-form').submit();
-      }, function(error) {
-        console.error('EMAIL FAILED...', error);
-        // Activation is more important than the email, so we proceed anyway
-        document.getElementById('subscribe-form').submit();
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add interactivity to plan selection
+    const planInputs = document.querySelectorAll('.plan-input');
+    
+    planInputs.forEach(input => {
+      input.addEventListener('change', function() {
+        // Remove selected class from all cards
+        document.querySelectorAll('.plan-card').forEach(card => {
+          card.classList.remove('selected');
+        });
+        
+        // Add selected class to current card
+        if (this.checked) {
+          this.closest('.plan-option').querySelector('.plan-card').classList.add('selected');
+        }
       });
+    });
+
+    // Form submission enhancement
+    const form = document.querySelector('.subscribe-form');
+    const submitButton = form.querySelector('.submit-button');
+    
+    form.addEventListener('submit', function() {
+      submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+      submitButton.disabled = true;
+    });
   });
 </script>
-
-<style>
-  .subscribe-section { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); min-height: 80vh; }
-  .btn-primary { background: linear-gradient(135deg, #3b82f6, #10b981); border: none; transition: 0.3s; }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2); }
-</style>
 {% endblock content %}

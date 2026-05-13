@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV /home/eissa/Desktop/fitness_edited_31-10/venv
+set -gx VIRTUAL_ENV '/home/eissa/Desktop/fitness_edited_31-10 (Copy)/venv'
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/"bin $PATH

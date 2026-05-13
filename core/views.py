@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
-from memberships.models import TrainingPlan
+from memberships.models import MembershipPlan
 from .forms import ContactForm
 
 
 def home(request):
-    plans = TrainingPlan.objects.all().order_by("price_cents")[:3]
+    plans = MembershipPlan.objects.filter(is_active=True).order_by("price")[:3]
     return render(request, "core/home.html", {"plans": plans,})
 
 

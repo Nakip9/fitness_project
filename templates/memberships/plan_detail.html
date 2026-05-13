@@ -9,12 +9,12 @@
     <!-- Header Section -->
     <div class="plan-header">
       <div class="breadcrumb">
-        <a href="{% url 'memberships:plan_list' %}">Memberships</a>
+        <a href="{% url 'memberships:plan_list' %}">Coaching Programs</a>
         <span>/</span>
         <span>{{ plan.name }}</span>
       </div>
       <h1>{{ plan.name }}</h1>
-      <p class="plan-subtitle">Bespoke performance architecture tailored to your unique physiology</p>
+      <p class="plan-subtitle">Science-backed training program designed for your success</p>
     </div>
 
     <div class="plan-content">
@@ -24,40 +24,40 @@
         <div class="plan-highlights">
           <div class="price-section">
             <div class="price-tag">
-              <span class="amount">${{ plan.price_display }}</span>
+              <span class="amount">${{ plan.price }}</span>
               <span class="period">/ {{ plan.duration_days }} days</span>
             </div>
             <div class="price-badge">
-              <i class="fas fa-star"></i>
-              Most Popular Choice
+              <i class="fas fa-bolt"></i>
+              High Performance
             </div>
           </div>
 
           <p class="plan-description">
-            {{ plan.description|default:"Our signature membership with unlimited classes, 24/7 gym access, and monthly wellness coaching. Experience the ultimate fitness transformation with personalized support." }}
+            {{ plan.description|default:"This comprehensive coaching program provides everything you need to reach your peak potential. Includes personalized programming, regular technical reviews, and direct support to ensure you stay on the right track." }}
           </p>
 
           <!-- Quick Stats -->
           <div class="plan-stats">
             <div class="stat">
-              <i class="fas fa-bullseye"></i>
+              <i class="fas fa-user-friends"></i>
               <div>
-                <span class="value">Bespoke</span>
+                <span class="value">1-on-1</span>
+                <span class="label">Coaching</span>
+              </div>
+            </div>
+            <div class="stat">
+              <i class="fas fa-file-alt"></i>
+              <div>
+                <span class="value">Custom</span>
                 <span class="label">Programming</span>
               </div>
             </div>
             <div class="stat">
-              <i class="fas fa-video"></i>
+              <i class="fas fa-mobile-alt"></i>
               <div>
-                <span class="value">Form</span>
-                <span class="label">Correction</span>
-              </div>
-            </div>
-            <div class="stat">
-              <i class="fas fa-utensils"></i>
-              <div>
-                <span class="value">Custom</span>
-                <span class="label">Nutrition</span>
+                <span class="value">24/7</span>
+                <span class="label">Coach Access</span>
               </div>
             </div>
           </div>
@@ -65,64 +65,85 @@
 
         <!-- Benefits Section -->
         <div class="benefits-section">
-          <h2>Protocol Inclusions</h2>
+          <h2>What's Included</h2>
           <div class="benefits-grid">
+            {% for benefit in plan.benefits.all %}
             <div class="benefit-item">
-              <div class="benefit-icon"><i class="fas fa-check"></i></div>
-              <span>1-on-1 Strategy Kickoff</span>
+              <div class="benefit-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <span>{{ benefit.text }}</span>
+            </div>
+            {% empty %}
+            <div class="benefit-item">
+              <div class="benefit-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <span>Unlimited group fitness classes</span>
             </div>
             <div class="benefit-item">
-              <div class="benefit-icon"><i class="fas fa-check"></i></div>
-              <span>Custom Biomechanical Assessment</span>
+              <div class="benefit-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <span>24/7 gym access with premium equipment</span>
             </div>
             <div class="benefit-item">
-              <div class="benefit-icon"><i class="fas fa-check"></i></div>
-              <span>Metabolic Nutrition Protocol</span>
+              <div class="benefit-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <span>Complimentary guest passes monthly</span>
             </div>
             <div class="benefit-item">
-              <div class="benefit-icon"><i class="fas fa-check"></i></div>
-              <span>Priority Coach Communication Hub</span>
+              <div class="benefit-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <span>Access to recovery lounge and spa</span>
             </div>
             <div class="benefit-item">
-              <div class="benefit-icon"><i class="fas fa-check"></i></div>
-              <span>Weekly Progress Audits</span>
+              <div class="benefit-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <span>Monthly wellness coaching sessions</span>
             </div>
             <div class="benefit-item">
-              <div class="benefit-icon"><i class="fas fa-check"></i></div>
-              <span>Form Correction via Video Analysis</span>
+              <div class="benefit-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <span>Nutrition planning and guidance</span>
             </div>
+            {% endfor %}
           </div>
         </div>
 
         <!-- Features Comparison -->
         <div class="features-section">
-          <h2>Plan Features</h2>
+          <h2>Program Features</h2>
           <div class="features-list">
             <div class="feature-category">
-              <h3>🏋️ Gym Access</h3>
+              <h3>📝 Custom Programming</h3>
               <ul>
-                <li><i class="fas fa-check"></i> 24/7 facility access</li>
-                <li><i class="fas fa-check"></i> Premium strength equipment</li>
-                <li><i class="fas fa-check"></i> Cardio zone with latest machines</li>
-                <li><i class="fas fa-check"></i> Functional training area</li>
+                <li><i class="fas fa-check"></i> Personalized exercise selection</li>
+                <li><i class="fas fa-check"></i> Volume and intensity management</li>
+                <li><i class="fas fa-check"></i> Periodized training blocks</li>
+                <li><i class="fas fa-check"></i> Accessory work included</li>
               </ul>
             </div>
             <div class="feature-category">
-              <h3>👥 Group Classes</h3>
+              <h3>🍎 Nutrition & Recovery</h3>
               <ul>
-                <li><i class="fas fa-check"></i> Unlimited class bookings</li>
-                <li><i class="fas fa-check"></i> Yoga & Pilates sessions</li>
-                <li><i class="fas fa-check"></i> High-intensity interval training</li>
-                <li><i class="fas fa-check"></i> Cycling and dance classes</li>
+                <li><i class="fas fa-check"></i> Individualized macro targets</li>
+                <li><i class="fas fa-check"></i> Supplementation guide</li>
+                <li><i class="fas fa-check"></i> Recovery protocol design</li>
+                <li><i class="fas fa-check"></i> Weekly lifestyle audits</li>
               </ul>
             </div>
             <div class="feature-category">
-              <h3>💎 Premium Perks</h3>
+              <h3>📱 Digital Support</h3>
               <ul>
-                <li><i class="fas fa-check"></i> Locker room with amenities</li>
-                <li><i class="fas fa-check"></i> Recovery lounge access</li>
-                <li><i class="fas fa-check"></i> Monthly guest passes</li>
-                <li><i class="fas fa-check"></i> Nutrition consultation</li>
+                <li><i class="fas fa-check"></i> Priority messaging access</li>
+                <li><i class="fas fa-check"></i> Video form analysis</li>
+                <li><i class="fas fa-check"></i> Performance tracking dashboard</li>
+                <li><i class="fas fa-check"></i> Monthly strategy calls</li>
               </ul>
             </div>
           </div>
@@ -133,42 +154,42 @@
       <div class="plan-sidebar">
         <div class="cta-card">
           <div class="cta-header">
-            <i class="fas fa-crown"></i>
-            <h3>Start Your Journey</h3>
-            <p>Join {{ SITE_NAME }} today and transform your life</p>
+            <i class="fas fa-dumbbell"></i>
+            <h3>Start Your Program</h3>
+            <p>Work directly with me to reach your fitness goals</p>
           </div>
 
           <div class="cta-content">
             {% if user.is_authenticated %}
             <div class="cta-benefits">
               <div class="benefit">
-                <i class="fas fa-phone"></i>
+                <i class="fas fa-clipboard-list"></i>
                 <div>
-                  <strong>Personalized Setup</strong>
-                  <span>We'll call to customize your experience</span>
+                  <strong>Strategy Session</strong>
+                  <span>We'll design your path to success</span>
                 </div>
               </div>
               <div class="benefit">
                 <i class="fas fa-clock"></i>
                 <div>
-                  <strong>Quick Response</strong>
-                  <span>Get a callback within 2 hours</span>
+                  <strong>Direct Response</strong>
+                  <span>I'll reach out within 2 hours</span>
                 </div>
               </div>
               <div class="benefit">
-                <i class="fas fa-star"></i>
+                <i class="fas fa-chart-line"></i>
                 <div>
                   <strong>Expert Guidance</strong>
-                  <span>Professional fitness assessment</span>
+                  <span>Professional physical assessment</span>
                 </div>
               </div>
             </div>
 
-            <a href="{% url 'memberships:subscribe' plan.pk %}" class="cta-button primary">
+            <a href="{% url 'memberships:subscribe' plan.slug %}" class="cta-button primary">
               <i class="fas fa-paper-plane"></i>
-              Apply for Coaching
+              Request Program Access
             </a>
-            <p class="cta-note">Coach will manually review your application</p>
+            <p class="cta-note">I'll personally help you get started</p>
 
             {% else %}
             <div class="cta-benefits">

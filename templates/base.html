@@ -252,12 +252,12 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link {% if 'memberships' in request.resolver_match.app_name %}active{% endif %}" href="{% url 'memberships:plan_list' %}">
-                  <i class="fas fa-crown me-1"></i>Memberships
+                  <i class="fas fa-dumbbell me-1"></i>Programs
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'core:about' %}">
-                  <i class="fas fa-info-circle me-1"></i>About
+                  <i class="fas fa-user me-1"></i>Your Coach
                 </a>
               </li>
               <li class="nav-item">
@@ -269,23 +269,20 @@
             <div class="d-flex ms-lg-4 gap-2">
               {% if user.is_authenticated %}
                 <a class="btn btn-outline-light btn-sm" href="{% url 'memberships:my_memberships' %}">
-                  <i class="fas fa-id-card me-1"></i>My Memberships
+                  <i class="fas fa-id-card me-1"></i>My Programs
                 </a>
                 <a class="btn btn-outline-light btn-sm" href="{% url 'payments:history' %}">
                   <i class="fas fa-receipt me-1"></i>Payments
                 </a>
-                <form action="{% url 'accounts:logout' %}" method="post" class="d-inline">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-gradient btn-sm">
-                    <i class="fas fa-sign-out-alt me-1"></i>Logout
-                  </button>
-                </form>
+                <a class="btn btn-gradient btn-sm" href="{% url 'accounts:logout' %}">
+                  <i class="fas fa-sign-out-alt me-1"></i>Logout
+                </a>
               {% else %}
                 <a class="btn btn-outline-light btn-sm" href="{% url 'accounts:login' %}">
                   <i class="fas fa-sign-in-alt me-1"></i>Login
                 </a>
                 <a class="btn btn-gradient btn-sm" href="{% url 'accounts:register' %}">
-                  <i class="fas fa-user-plus me-1"></i>Join Now
+                  <i class="fas fa-user-plus me-1"></i>Start Training
                 </a>
               {% endif %}
             </div>
@@ -326,7 +323,7 @@
             </h3>
             <p class="mb-0 text-light opacity-75">{{ SITE_TAGLINE }}</p>
             <p class="small mt-2 text-light opacity-50">
-              <i class="fas fa-map-marker-alt me-1"></i>Soni krivoi 79a 
+              <i class="fas fa-globe me-1"></i>Available Worldwide &bull; Online Coaching
             </p>
           </div>
           <div class="col-md-6 text-md-end">

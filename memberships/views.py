@@ -1,169 +1,202 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.generic import DetailView, ListView
-from django.views.decorators.http import require_POST
-from django.db import transaction
-from datetime import timedelta
+
+# get_object_or_404 is still used by subscribe(); _get_membership_for_user
+# handles the staff-aware lookup for all membership-specific views.
+
+from payments.models import PaymentRequest
 
 from .forms import MembershipContactForm
-from .models import TrainingPlan, Membership, MembershipNote, AuditLog
+from .models import Membership, MembershipNote, MembershipPlan
 
 
 class MembershipPlanListView(ListView):
     template_name = "memberships/plan_list.html"
-    queryset = TrainingPlan.objects.all()
+    queryset = MembershipPlan.objects.filter(is_active=True)
     context_object_name = "plans"
 
 
 class MembershipPlanDetailView(DetailView):
     template_name = "memberships/plan_detail.html"
-    model = TrainingPlan
+    model = MembershipPlan
+    slug_field = "slug"
+    slug_url_kwarg = "slug"
     context_object_name = "plan"
 
 
 @login_required
-def subscribe(request, pk):
-    """Instant Activation Flow: User chooses tier and protocol starts immediately."""
-    plan = get_object_or_404(TrainingPlan, pk=pk)
-    
+def subscribe(request, slug):
+    plan = get_object_or_404(MembershipPlan, slug=slug, is_active=True)
+    plans = MembershipPlan.objects.filter(is_active=True)
     if request.method == "POST":
-        start_date = timezone.now()
-        end_date = start_date + timedelta(days=plan.duration_days)
-
-        # Create the membership in ACTIVE state immediately
-        membership = Membership.objects.create(
-            trainee=request.user,
-            plan=plan,
-            status=Membership.Status.ACTIVE,
-            payment_status=Membership.PaymentStatus.PAID,
-            scheduled_start=start_date,
-            scheduled_end=end_date
-        )
-        
-        # Save initial goals as a note
-        goals = request.POST.get("goals", "")
-        if goals:
-            MembershipNote.objects.create(
-                membership=membership,
-                author=request.user,
-                content=f"Initial Goals: {goals}"
+        form = MembershipContactForm(request.POST, plans=plans)
+        if form.is_valid():
+            selected_plan = form.cleaned_data["plan"]
+            phone_number = form.cleaned_data["phone_number"]
+            membership = (
+                Membership.objects.filter(
+                    user=request.user,
+                    plan=selected_plan,
+                    status="pending",
+                )
+                .order_by("-start_date")
+                .first()
             )
-            
-        AuditLog.objects.create(
-            membership=membership,
-            actor=request.user,
-            action="INSTANT_ACTIVATION",
-            new_state={"status": "ACTIVE", "start": str(start_date)}
-        )
+            if membership is None:
+                membership = Membership.objects.create(
+                    user=request.user,
+                    plan=selected_plan,
+                    start_date=timezone.now(),
+                    status="pending",
+                )
+            PaymentRequest.objects.create(
+                user=request.user,
+                plan=selected_plan,
+                phone_number=phone_number,
+                notes=f"Membership #{membership.pk} pending activation",
+            )
+            messages.success(
+                request,
+                "Thank you! Our customer service team will contact you within 2 hours to finalize your membership.",
+            )
+            return redirect("memberships:plan_detail", slug=selected_plan.slug)
+    else:
+        form = MembershipContactForm(plans=plans, initial_plan=plan)
 
-        messages.success(request, f"Your {plan.name} protocol has started! Check your email for details.")
-        return redirect("memberships:my_memberships")
-        
-    return render(request, "memberships/subscribe.html", {"plan": plan})
+    selected_plan_value = form["plan"].value() or (str(plans.first().pk) if plans else "")
+    return render(
+        request,
+        "memberships/subscribe.html",
+        {
+            "plan": plan,
+            "plans": plans,
+            "form": form,
+            "selected_plan": selected_plan_value,
+        },
+    )
 
 
 @login_required
 def my_memberships(request):
-    """Requirement 2: Full Client Visibility & Real-Time UI."""
-    memberships = Membership.objects.filter(trainee=request.user).select_related('plan', 'coach').prefetch_related('comms_hub', 'audit_trail')
+    memberships = Membership.objects.filter(user=request.user).select_related("plan")
     return render(request, "memberships/my_memberships.html", {"memberships": memberships})
 
 
-@login_required
-def activate_plan(request, membership_id):
-    """Fallback for manual approval if needed."""
-    membership = get_object_or_404(Membership, id=membership_id, trainee=request.user)
-    
-    if membership.status == Membership.Status.APPROVED:
-        start_date = timezone.now()
-        membership.scheduled_start = start_date
-        membership.scheduled_end = start_date + timedelta(days=membership.plan.duration_days)
-        membership.status = Membership.Status.ACTIVE
-        membership.payment_status = Membership.PaymentStatus.PAID
-        membership.save()
-        messages.success(request, "Protocol activated.")
-    
-    return redirect("memberships:my_memberships")
+def _get_membership_for_user(pk, user):
+    """
+    Return the Membership with the given pk if the requesting user is allowed
+    to access it:
+      - Staff / superusers can access any membership.
+      - Regular users can only access their own.
+    Raises Http404 if not found or not permitted.
+    """
+    from django.http import Http404
+
+    try:
+        membership = Membership.objects.select_related("user", "plan").get(pk=pk)
+    except Membership.DoesNotExist:
+        raise Http404("No Membership matches the given query.")
+
+    if not user.is_staff and membership.user != user:
+        raise Http404("No Membership matches the given query.")
+
+    return membership
 
 
 @login_required
-@require_POST
-def add_note(request, membership_id):
-    """Requirement 6: Interactive Notes & Replies."""
-    membership = get_object_or_404(Membership, id=membership_id)
-    
-    if request.user != membership.trainee and request.user != membership.coach:
-        return redirect("core:home")
-
-    content = request.POST.get("content")
-    parent_id = request.POST.get("parent_id")
-    
-    if content:
-        parent_note = None
-        if parent_id:
-            parent_note = MembershipNote.objects.filter(id=parent_id).first()
-
-        MembershipNote.objects.create(
-            membership=membership,
-            author=request.user,
-            content=content,
-            parent=parent_note,
-            is_coach_note=(request.user == membership.coach)
-        )
-        messages.success(request, "Note recorded.")
-    return redirect("memberships:my_memberships")
+def membership_detail(request, pk):
+    """
+    Trainees see only their own membership.
+    Staff (coach / admin) can view any membership.
+    """
+    membership = _get_membership_for_user(pk, request.user)
+    notes = membership.notes.select_related("author").all()
+    return render(
+        request,
+        "memberships/membership_detail.html",
+        {"membership": membership, "notes": notes},
+    )
 
 
 @login_required
-def update_status(request, membership_id, status):
-    """Requirement 4: Plan Lifecycle Management."""
-    membership = get_object_or_404(Membership, id=membership_id, trainee=request.user)
-    
-    status_map = {
-        'CANCELLED': Membership.Status.CANCELLED,
-        'POSTPONED': Membership.Status.POSTPONED,
-        'PAUSED': Membership.Status.PAUSED,
-        'ACTIVE': Membership.Status.ACTIVE,
-    }
-    
-    new_status = status_map.get(status.upper())
-    if new_status:
-        old_status = membership.get_status_display()
-        membership.status = new_status
-        membership.save()
-        
-        AuditLog.objects.create(
-            membership=membership,
-            actor=request.user,
-            action="TRAINEE_LIFECYCLE_CHANGE",
-            old_state={"status": old_status},
-            new_state={"status": membership.get_status_display()}
-        )
-        messages.success(request, f"Status updated to {membership.get_status_display()}.")
-        
-    return redirect("memberships:my_memberships")
+def add_note(request, pk):
+    """Allow the membership owner OR any staff member (coach) to add notes."""
+    membership = _get_membership_for_user(pk, request.user)
 
-
-@login_required
-def update_schedule(request, membership_id):
-    membership = get_object_or_404(Membership, id=membership_id, trainee=request.user)
-    
     if request.method == "POST":
-        start_str = request.POST.get("start_time")
-        end_str = request.POST.get("end_time")
-        
-        if start_str and end_str:
-            old_start = membership.scheduled_start
-            membership.scheduled_start = start_str
-            membership.scheduled_end = end_str
-            
-            try:
-                membership.full_clean()
-                membership.save()
-                messages.success(request, "Schedule updated!")
-            except Exception as e:
-                messages.error(request, f"Conflict: {e}")
-                
-    return redirect("memberships:my_memberships")
+        content = request.POST.get("content", "").strip()
+        if content:
+            MembershipNote.objects.create(
+                membership=membership,
+                author=request.user,
+                content=content,
+            )
+            messages.success(request, "Note added successfully.")
+        else:
+            messages.error(request, "Note content cannot be empty.")
+
+    return redirect("memberships:membership_detail", pk=pk)
+
+
+@login_required
+def cancel_membership(request, pk):
+    """
+    Cancel the membership — stops the active countdown.
+    Accessible by the membership owner OR staff.
+    Only processes on POST; GET redirects back with a warning.
+    """
+    membership = _get_membership_for_user(pk, request.user)
+
+    if membership.status == "canceled":
+        messages.info(request, "This membership is already canceled.")
+        return redirect("memberships:membership_detail", pk=pk)
+
+    if request.method == "POST":
+        try:
+            membership.cancel()
+            messages.success(
+                request,
+                "The membership has been canceled. The countdown has been stopped.",
+            )
+        except ValidationError as exc:
+            messages.error(request, " ".join(exc.messages))
+    else:
+        # Somebody navigated here via GET — just bounce back
+        messages.warning(request, "Use the Cancel button on the membership page.")
+
+    return redirect("memberships:membership_detail", pk=pk)
+
+
+@login_required
+def postpone_membership(request, pk):
+    """
+    Postpone the membership — freezes remaining days and hides the session
+    window until the coach assigns a new time.
+    Accessible by the membership owner OR staff.
+    Only processes on POST; GET redirects back with a warning.
+    """
+    membership = _get_membership_for_user(pk, request.user)
+
+    if membership.status == "postponed":
+        messages.info(request, "This membership is already postponed.")
+        return redirect("memberships:membership_detail", pk=pk)
+
+    if request.method == "POST":
+        try:
+            membership.postpone()
+            messages.success(
+                request,
+                f"Membership postponed. "
+                f"{membership.postponed_remaining_days} days have been frozen. "
+                "The coach will assign a new session time when ready to resume.",
+            )
+        except ValidationError as exc:
+            messages.error(request, " ".join(exc.messages))
+    else:
+        messages.warning(request, "Use the Postpone button on the membership page.")
+
+    return redirect("memberships:membership_detail", pk=pk)

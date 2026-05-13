@@ -11,32 +11,32 @@
       <div class="hero-text">
         <div class="hero-badge">
           <i class="fas fa-crown"></i>
-          Premium Memberships
+          Elite Coaching Programs
         </div>
         <h1>Find Your Perfect <span>Training Plan</span></h1>
-        <p class="hero-description">Bespoke 1-on-1 coaching plans designed for every fitness level and goal. From weight loss to elite muscle building, get the personal attention your body needs.</p>
+        <p class="hero-description">Personalized training programs designed to fit your lifestyle, goals, and experience level. Whether you're just starting or looking to break a plateau, I have the roadmap for your success.</p>
         <div class="hero-actions">
           <a href="#membership-plans" class="cta-button primary">
-            <i class="fas fa-calendar-check"></i>
-            Request Coaching
+            <i class="fas fa-dumbbell"></i>
+            Explore Programs
           </a>
           <a href="{% url 'core:contact' %}" class="cta-button secondary">
-            <i class="fas fa-question-circle"></i>
-            Get Advice
+            <i class="fas fa-comment-alt"></i>
+            Free Consultation
           </a>
         </div>
         <div class="hero-stats">
           <div class="stat">
-            <div class="stat-number">1-on-1</div>
-            <div class="stat-label">Personal Focus</div>
+            <div class="stat-number">Custom</div>
+            <div class="stat-label">Workout Plans</div>
           </div>
           <div class="stat">
-            <div class="stat-number">Bespoke</div>
-            <div class="stat-label">Custom Protocols</div>
+            <div class="stat-number">Direct</div>
+            <div class="stat-label">Coach Access</div>
           </div>
           <div class="stat">
-            <div class="stat-number">Expert</div>
-            <div class="stat-label">Form Correction</div>
+            <div class="stat-number">Pro</div>
+            <div class="stat-label">Nutrition Guide</div>
           </div>
         </div>
       </div>
@@ -71,9 +71,9 @@
 <section id="membership-plans" class="plans-section">
   <div class="container">
     <div class="section-header">
-      <div class="section-badge">Choose Your Path</div>
-      <h2>Training <span>Options</span></h2>
-      <p class="section-description">Select a bespoke coaching plan. Your coach will review your request and assign a precision time slot.</p>
+      <div class="section-badge">Choose Your Program</div>
+      <h2>Training <span>Packages</span></h2>
+      <p class="section-description">Results-driven programs tailored to your specific needs. Select the level of support that's right for you.</p>
     </div>
 
     <div class="plans-grid">
@@ -92,28 +92,35 @@
         </div>
 
         <div class="plan-price">
-          <span class="price">${{ plan.price_display }}</span>
-          <span class="period">/ {{ plan.duration_days }} Days</span>
+          <span class="price">${{ plan.price }}</span>
+          <span class="period">/{{ plan.get_billing_cycle_display }}</span>
         </div>
 
         <p class="plan-description">{{ plan.description|default:"Perfect for building strength and endurance." }}</p>
 
         <div class="plan-benefits">
+          {% for benefit in plan.benefits.all %}
           <div class="benefit">
             <i class="fas fa-check-circle"></i>
-            <span>Bespoke 1-on-1 Protocols</span>
+            <span>{{ benefit.text }}</span>
+          </div>
+          {% empty %}
+          <div class="benefit">
+            <i class="fas fa-check-circle"></i>
+            <span>Access to all equipment</span>
           </div>
           <div class="benefit">
             <i class="fas fa-check-circle"></i>
-            <span>Video Form Analysis</span>
+            <span>Group fitness classes</span>
           </div>
           <div class="benefit">
             <i class="fas fa-check-circle"></i>
-            <span>24/7 Coach Communication</span>
+            <span>Locker room access</span>
           </div>
+          {% endfor %}
         </div>
 
-        <a href="{% url 'memberships:plan_detail' plan.pk %}" class="plan-button {% if plan.featured %}primary{% else %}secondary{% endif %}">
+        <a href="{% url 'memberships:plan_detail' plan.slug %}" class="plan-button {% if plan.featured %}primary{% else %}secondary{% endif %}">
           {% if plan.featured %}
           <i class="fas fa-bolt"></i>
           Get Started
@@ -144,34 +151,34 @@
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon">
-          <i class="fas fa-bullseye"></i>
+          <i class="fas fa-file-invoice"></i>
         </div>
-        <h3>Bespoke Design</h3>
-        <p>Your program is architected specifically for your goals and physiology.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">
-          <i class="fas fa-video"></i>
-        </div>
-        <h3>Form Mastery</h3>
-        <p>Deep-dive video analysis to ensure every rep is safe and effective.</p>
+        <h3>Custom Workouts</h3>
+        <p>Dynamic training plans that adapt as you get stronger and more skilled.</p>
       </div>
 
       <div class="feature-card">
         <div class="feature-icon">
           <i class="fas fa-utensils"></i>
         </div>
-        <h3>Nutrition Logic</h3>
-        <p>Data-backed fueling protocols tailored to your metabolic rate.</p>
+        <h3>Nutrition Support</h3>
+        <p>Macronutrient calculations and meal guides to complement your training.</p>
       </div>
 
       <div class="feature-card">
         <div class="feature-icon">
-          <i class="fas fa-user-shield"></i>
+          <i class="fas fa-video"></i>
         </div>
-        <h3>Elite Support</h3>
-        <p>Direct priority access to your coach via the Training Hub.</p>
+        <h3>Form Reviews</h3>
+        <p>Send me videos of your lifts for expert technical feedback and safety.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-mobile"></i>
+        </div>
+        <h3>App Access</h3>
+        <p>Track your progress, view your workouts, and message me anytime via the app.</p>
       </div>
     </div>
   </div>

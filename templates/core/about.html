@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}About | {{ SITE_NAME }}{% endblock title %}
+{% block title %}About Your Coach | {{ SITE_NAME }}{% endblock title %}
 
 {% block content %}
 <section class="about-hero">
   <div class="container">
     <div class="hero-content">
-      <h1>Where Passion Meets Performance</h1>
-      <p class="hero-subtitle">Transforming lives through fitness, community, and expert guidance</p>
+      <h1>Expert Coaching. Real Results.</h1>
+      <p class="hero-subtitle">Dedicated to helping you transform your body and mindset through personalized, science-based training.</p>
       <a href="{% url 'memberships:plan_list' %}" class="cta-button">
-        <i class="fas fa-heart"></i>
-        Join Our Community
+        <i class="fas fa-dumbbell"></i>
+        Start Your Journey
       </a>
     </div>
   </div>
@@ -21,52 +21,52 @@
   <div class="container">
     <div class="story-grid">
       <div class="story-content">
-        <h2>Our Story</h2>
-        <p class="story-intro">We built {{ SITE_NAME }} for athletes, creators, and anyone who wants to feel stronger every day. What started as a vision to create the ultimate fitness experience has grown into a community of thousands transforming their lives.</p>
+        <h2>Meet Your Coach</h2>
+        <p class="story-intro">Hi, I'm Jafri. I've dedicated over a decade to mastering the science of fitness and performance. My mission is to provide more than just a workout—I provide a complete roadmap to your best self.</p>
         
         <div class="story-features">
           <div class="feature">
-            <i class="fas fa-dumbbell"></i>
+            <i class="fas fa-graduation-cap"></i>
             <div>
-              <h3>Elite Coaching</h3>
-              <p>Certified trainers with proven track records of success</p>
+              <h3>Certified Expertise</h3>
+              <p>Certified Strength and Conditioning Specialist with 10+ years of clinical and field experience.</p>
             </div>
           </div>
           <div class="feature">
-            <i class="fas fa-users"></i>
+            <i class="fas fa-bullseye"></i>
             <div>
-              <h3>Supportive Community</h3>
-              <p>Join like-minded individuals on their fitness journey</p>
+              <h3>Personalized Strategy</h3>
+              <p>I don't believe in one-size-fits-all. Every program is built from the ground up for YOU.</p>
             </div>
           </div>
           <div class="feature">
-            <i class="fas fa-star"></i>
+            <i class="fas fa-heartbeat"></i>
             <div>
-              <h3>Premium Facilities</h3>
-              <p>State-of-the-art equipment in inspiring environments</p>
+              <h3>Holistic Wellness</h3>
+              <p>We focus on recovery, nutrition, and mental resilience as much as the lifting.</p>
             </div>
           </div>
         </div>
 
-        <p>From sunrise bootcamps to restorative evening yoga, our experiences are designed around your goals. We blend immersive sound, lighting, and energy to deliver classes that feel like events.</p>
+        <p>Whether you're looking to lose weight, build muscle, or improve athletic performance, I'm here to guide you with the tools, knowledge, and motivation you need to succeed.</p>
       </div>
 
       <div class="story-visual">
         <div class="main-image">
-          <img src="{% static 'img/in_fit.jpg' %}" alt="Modern fitness studio at {{ SITE_NAME }}">
+          <img src="{% static 'img/jafrifit-hero.jpg' %}" alt="Coach Jafri Training">
         </div>
         <div class="stats-card">
           <div class="stat">
-            <span class="number">5+</span>
+            <span class="number">10+</span>
             <span class="label">Years Experience</span>
           </div>
           <div class="stat">
-            <span class="number">2,000+</span>
-            <span class="label">Members Transformed</span>
+            <span class="number">200+</span>
+            <span class="label">Lives Changed</span>
           </div>
           <div class="stat">
-            <span class="number">50+</span>
-            <span class="label">Weekly Classes</span>
+            <span class="number">100%</span>
+            <span class="label">Client Focus</span>
           </div>
         </div>
       </div>
@@ -76,38 +76,38 @@
 
 <section class="why-choose-us">
   <div class="container">
-    <h2>Why Members Choose Us</h2>
+    <h2>The Coaching Difference</h2>
     <div class="benefits-grid">
       <div class="benefit-card">
         <div class="benefit-icon">
-          <i class="fas fa-trophy"></i>
+          <i class="fas fa-microscope"></i>
         </div>
-        <h3>Award-Winning Trainers</h3>
-        <p>Our team includes nationally recognized fitness experts and wellness professionals with years of experience.</p>
+        <h3>Science-Based</h3>
+        <p>Every movement and meal plan is backed by the latest sports science and nutritional research.</p>
       </div>
       
       <div class="benefit-card">
         <div class="benefit-icon">
-          <i class="fas fa-gem"></i>
+          <i class="fas fa-mobile-alt"></i>
         </div>
-        <h3>Boutique Experience</h3>
-        <p>Premium equipment and personalized attention in a luxurious, well-maintained environment.</p>
+        <h3>Direct Access</h3>
+        <p>Get direct support from me via our private coaching app for questions and motivation.</p>
       </div>
       
       <div class="benefit-card">
         <div class="benefit-icon">
-          <i class="fas fa-calendar-alt"></i>
+          <i class="fas fa-chart-line"></i>
         </div>
-        <h3>Flexible Schedule</h3>
-        <p>Classes across multiple disciplines from early morning to late evening, 7 days a week.</p>
+        <h3>Data-Driven</h3>
+        <p>We track everything—strength metrics, body composition, and recovery—to ensure constant progress.</p>
       </div>
       
       <div class="benefit-card">
         <div class="benefit-icon">
-          <i class="fas fa-apple-alt"></i>
+          <i class="fas fa-sync"></i>
         </div>
-        <h3>Holistic Approach</h3>
-        <p>Nutrition coaching, recovery lounges, and exclusive member events for complete wellness.</p>
+        <h3>Evolving Plans</h3>
+        <p>As you grow, your plan grows. We pivot and adjust based on your real-world results.</p>
       </div>
     </div>
   </div>
@@ -141,7 +141,7 @@
         <div class="story-content">
           <h3>Mike's Transformation</h3>
           <p class="member-stats">Gained 20 lbs muscle • Powerlifter • 2 years</p>
-          <p>"The expert guidance and premium equipment helped me transform from skinny to strong. I've doubled my strength and gained confidence in every aspect of my life."</p>
+          <p>"The expert programming and data-driven approach helped me transform from skinny to strong. I've doubled my strength and gained confidence in every aspect of my life."</p>
           <div class="achievements">
             <span class="achievement">Strength Coach</span>
             <span class="achievement">20 lbs Muscle</span>
@@ -156,7 +156,7 @@
         <div class="story-content">
           <h3>Lisa's Success</h3>
           <p class="member-stats">Yoga Instructor • Stress Management • 1 year</p>
-          <p>"{{ SITE_NAME }} helped me find balance. The yoga classes and supportive community taught me that fitness is about mental health as much as physical strength."</p>
+          <p>"{{ SITE_NAME }} helped me find balance. The personalized online programs and expert support taught me that fitness is about mental health as much as physical strength."</p>
           <div class="achievements">
             <span class="achievement">Yoga Certified</span>
             <span class="achievement">Stress Free</span>
@@ -170,35 +170,35 @@
 <section class="video-tour">
   <div class="container">
     <div class="video-content">
-      <h2>Take a Virtual Tour</h2>
-      <p>See our state-of-the-art facilities and experience the {{ SITE_NAME }} difference</p>
+      <h2>The Digital Coaching Experience</h2>
+      <p>Master your technique and track your progress with our state-of-the-art coaching platform</p>
       
       <div class="video-container">
         <div class="video-placeholder">
-          <i class="fas fa-play"></i>
-          <p>Studio Tour Video</p>
+          <i class="fas fa-mobile-alt"></i>
+          <p>Training App Demo</p>
           <a href="https://www.youtube.com/watch?v=U1zCyaQc91g&t=605s" target="_blank" class="video-link">
-            Watch on YouTube <i class="fab fa-youtube"></i>
+            Watch App Demo <i class="fab fa-youtube"></i>
           </a>
         </div>
       </div>
       
       <div class="video-features">
         <div class="video-feature">
-          <i class="fas fa-dumbbell"></i>
-          <span>Premium Equipment</span>
+          <i class="fas fa-chart-line"></i>
+          <span>Live Progress Tracking</span>
         </div>
         <div class="video-feature">
-          <i class="fas fa-users"></i>
-          <span>Group Classes</span>
+          <i class="fas fa-video"></i>
+          <span>Video Form Analysis</span>
         </div>
         <div class="video-feature">
-          <i class="fas fa-spa"></i>
-          <span>Recovery Areas</span>
+          <i class="fas fa-utensils"></i>
+          <span>Nutritional Logging</span>
         </div>
         <div class="video-feature">
-          <i class="fas fa-lock"></i>
-          <span>Secure Facilities</span>
+          <i class="fas fa-comments"></i>
+          <span>24/7 Coach Chat</span>
         </div>
       </div>
     </div>

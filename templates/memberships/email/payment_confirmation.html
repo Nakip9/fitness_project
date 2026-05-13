@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Coaching Plan is Active</title>
+  <style>
+    body { margin: 0; padding: 0; background: #f1f5f9; font-family: 'Segoe UI', Arial, sans-serif; color: #1e293b; }
+    .wrapper { max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+    .header { background: linear-gradient(135deg, #3b82f6, #10b981); padding: 40px 32px; text-align: center; }
+    .header h1 { margin: 0; color: #ffffff; font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+    .header p { margin: 8px 0 0; color: rgba(255,255,255,0.85); font-size: 15px; }
+    .badge { display: inline-block; background: rgba(255,255,255,0.2); color: #fff; padding: 6px 18px; border-radius: 50px; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
+    .body { padding: 36px 32px; }
+    .greeting { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .intro { color: #64748b; line-height: 1.6; margin-bottom: 28px; }
+    .section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 12px; }
+    .info-block { background: #f8fafc; border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; }
+    .info-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e2e8f0; }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: #64748b; font-size: 14px; }
+    .info-value { font-weight: 700; color: #1e293b; font-size: 14px; text-align: right; }
+    .info-value.highlight { color: #3b82f6; }
+    .info-value.green { color: #10b981; }
+    .coach-notes-block { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 12px 12px 0; padding: 20px 24px; margin-bottom: 28px; }
+    .coach-notes-block .section-title { color: #92400e; }
+    .coach-notes-block p { color: #78350f; line-height: 1.7; margin: 0; white-space: pre-line; }
+    .cta-block { text-align: center; margin: 32px 0; }
+    .cta-btn { display: inline-block; background: linear-gradient(135deg, #3b82f6, #10b981); color: #ffffff; text-decoration: none; padding: 14px 36px; border-radius: 50px; font-weight: 700; font-size: 15px; letter-spacing: 0.3px; }
+    .footer { background: #f8fafc; padding: 24px 32px; text-align: center; border-top: 1px solid #e2e8f0; }
+    .footer p { margin: 0; color: #94a3b8; font-size: 13px; line-height: 1.6; }
+    .footer a { color: #3b82f6; text-decoration: none; }
+    @media (max-width: 600px) {
+      .body, .header, .footer { padding: 24px 20px; }
+      .info-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+      .info-value { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <!-- Header -->
+    <div class="header">
+      <div class="badge">✅ Payment Confirmed</div>
+      <h1>Your Coaching Plan is Now Active!</h1>
+      <p>Welcome to the team, {{ user.get_full_name|default:user.username }}.</p>
+    </div>
+
+    <!-- Body -->
+    <div class="body">
+      <p class="greeting">Hello, {{ user.get_full_name|default:user.username }}!</p>
+      <p class="intro">
+        Your payment has been successfully processed and your coaching plan is now
+        <strong>fully active</strong>. Everything you need is below — bookmark your
+        dashboard link to stay on top of your progress.
+      </p>
+
+      <!-- Plan Details -->
+      <div class="section-title">📋 Plan Details</div>
+      <div class="info-block">
+        <div class="info-row">
+          <span class="info-label">Plan Name</span>
+          <span class="info-value highlight">{{ plan.name }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Total Duration</span>
+          <span class="info-value">{{ plan.duration_days }} Days</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Days Remaining</span>
+          <span class="info-value green">{{ membership.days_left }} Days</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Access Expires On</span>
+          <span class="info-value">{{ membership.end_date|date:"F d, Y" }}</span>
+        </div>
+      </div>
+
+      <!-- Session Schedule -->
+      <div class="section-title">🕐 Your Scheduled Session</div>
+      <div class="info-block">
+        {% if membership.scheduled_time %}
+        <div class="info-row">
+          <span class="info-label">Daily Time Slot</span>
+          <span class="info-value highlight">{{ membership.time_slot }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Session Duration</span>
+          <span class="info-value">{{ membership.duration_minutes }} minutes</span>
+        </div>
+        {% else %}
+        <div class="info-row">
+          <span class="info-label">Session Time</span>
+          <span class="info-value" style="color:#94a3b8;">To be assigned by your coach — check your dashboard.</span>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Coach Notes -->
+      {% if membership.coach_notes %}
+      <div class="section-title">📝 Initial Notes from Your Coach</div>
+      <div class="coach-notes-block">
+        <p>{{ membership.coach_notes }}</p>
+      </div>
+      {% endif %}
+
+      <!-- CTA -->
+      <div class="cta-block">
+        <a href="{{ dashboard_url }}" class="cta-btn">View My Dashboard →</a>
+      </div>
+
+      <p style="color:#64748b;font-size:14px;line-height:1.6;text-align:center;">
+        Please be ready <strong>5 minutes before</strong> your session starts.<br>
+        You can message your coach directly from your dashboard at any time.
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>
+        This email was sent by <strong>{{ site_name }}</strong>.<br>
+        Questions? <a href="{{ dashboard_url }}">Visit your dashboard</a> or reply to this email.
+      </p>
+      <p style="margin-top:8px;">© {{ site_name }}. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>

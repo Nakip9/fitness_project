@@ -1,253 +1,722 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}My Training Hub | {{ SITE_NAME }}{% endblock title %}
+{% block title %}My Programs | {{ SITE_NAME }}{% endblock title %}
 
 {% block content %}
 <section class="memberships-section">
   <div class="container">
+    <!-- Header Section -->
     <div class="page-header">
-      <h1>My Training Hub</h1>
-      <p class="page-subtitle">Expert 1-on-1 coaching dashboard. Precision protocols, scheduling, and communication.</p>
+      <h1>My Training Programs</h1>
+      <p class="page-subtitle">Manage your coaching packages and track your progress</p>
     </div>
 
     {% if memberships %}
+      <!-- Active Memberships -->
       <div class="memberships-container">
         {% for membership in memberships %}
         <div class="membership-card">
           <div class="membership-header">
             <div class="plan-info">
               <h2>{{ membership.plan.name }}</h2>
-              <div class="coach-info">
-                {% if membership.coach %}
-                  <span class="coach-badge"><i class="fas fa-user-tie"></i> Coach: {{ membership.coach.username }}</span>
-                {% else %}
-                  <span class="coach-badge pending"><i class="fas fa-clock"></i> Assigning Architect...</span>
-                {% endif %}
-              </div>
+              <p class="plan-description">Personalized coaching and support</p>
             </div>
-            <div class="status-controls">
-                <div class="status-badge status-{{ membership.status }}">
-                  {{ membership.get_status_display }}
-                </div>
-                
-                <!-- EXPERT FLOW: STEP 3 - PAYMENT & ACTIVATION -->
-                {% if membership.status == 'APPROVED' %}
-                  <div class="mt-2 text-center">
-                    <button class="btn btn-success btn-sm w-100 fw-bold py-2 shadow-sm" onclick="handleExpertActivation({{ membership.id }}, '{{ membership.plan.name }}', '{{ membership.plan.duration_days }}', '{{ membership.scheduled_start|date:'M d, Y' }}')">
-                      <i class="fas fa-credit-card"></i> PAY & ACTIVATE NOW
-                    </button>
-                    <small class="text-muted d-block mt-1">Slot reserved! Activate to start.</small>
-                  </div>
-                {% endif %}
+            <div class="status-badge {% if membership.status == 'active' %}active{% else %}inactive{% endif %}">
+              {{ membership.status|title }}
             </div>
           </div>
 
           <div class="membership-details">
-            {% if membership.status == 'REQUESTED' %}
-                <div class="alert alert-info border-0 rounded-4 mb-3 d-flex align-items-center">
-                    <i class="fas fa-hourglass-start me-3 fs-4"></i>
-                    <div>
-                        <strong>Application Under Review</strong><br>
-                        <small>Your coach is analyzing your goals to assign your precision time slot.</small>
-                    </div>
-                </div>
-            {% endif %}
-
             <div class="detail-grid">
-              <!-- Days Remaining / Expiry -->
-              <div class="detail-item {% if membership.status == 'ACTIVE' %}highlight{% endif %}">
-                <div class="detail-icon schedule">
+              <div class="detail-item">
+                <div class="detail-icon">
                   <i class="fas fa-calendar-check"></i>
                 </div>
                 <div class="detail-content">
-                  <label>Training Window</label>
-                  {% if membership.status == 'ACTIVE' %}
-                    <span class="detail-value text-primary fw-bold">{{ membership.days_remaining }} DAYS REMAINING</span>
-                    <small class="d-block text-muted">Ends: {{ membership.scheduled_end|date:"M d, Y" }}</small>
-                  {% elif membership.status == 'APPROVED' %}
-                    <span class="detail-value text-success">TIME ASSIGNED</span>
-                    <small class="d-block text-muted">Starts: {{ membership.scheduled_start|date:"M d, Y" }}</small>
-                  {% else %}
-                    <span class="detail-value text-muted">Awaiting Schedule</span>
-                  {% endif %}
+                  <label>Start Date</label>
+                  <span class="detail-value">{{ membership.start_date|date:"F d, Y" }}</span>
                 </div>
               </div>
 
-              <!-- Lifecycle Actions -->
               <div class="detail-item">
                 <div class="detail-icon">
-                  <i class="fas fa-sliders-h"></i>
+                  <i class="fas fa-calendar-times"></i>
                 </div>
                 <div class="detail-content">
-                  <label>Plan Management</label>
-                  <div class="btn-group-sm mt-1">
-                    {% if membership.status == 'ACTIVE' %}
-                      <a href="{% url 'memberships:update_status' membership.id 'paused' %}" class="btn-status pause">Pause</a>
-                      <a href="{% url 'memberships:update_status' membership.id 'postponed' %}" class="btn-status postpone">Postpone</a>
-                      <a href="{% url 'memberships:update_status' membership.id 'cancelled' %}" class="btn-status cancel" onclick="return confirm('Terminate this protocol?')">Cancel</a>
-                    {% elif membership.status in 'POSTPONED,PAUSED' %}
-                      <a href="{% url 'memberships:update_status' membership.id 'active' %}" class="btn-status resume">Resume</a>
-                    {% endif %}
-                  </div>
+                  <label>End Date</label>
+                  <span class="detail-value">{{ membership.end_date|date:"F d, Y" }}</span>
+                </div>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-icon">
+                  <i class="fas fa-sync-alt"></i>
+                </div>
+                <div class="detail-content">
+                  <label>Auto Renew</label>
+                  <span class="detail-value {% if membership.auto_renew %}renewing{% else %}not-renewing{% endif %}">
+                    {{ membership.auto_renew|yesno:"Yes,No" }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-icon">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <div class="detail-content">
+                  <label>Days Remaining</label>
+                  <span class="detail-value days-remaining">
+                    {{ membership.end_date|timeuntil:membership.start_date }}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Interaction: Notebook with Replies -->
-          <div class="interaction-section">
-            <h3 class="section-title"><i class="fas fa-comment-medical"></i> Coach's Notebook & Comms</h3>
-            
-            <div class="notes-container">
-              {% for note in membership.comms_hub.all %}
-                {% if not note.parent %}
-                <div class="note-wrapper mb-3">
-                    <div class="note-bubble {% if note.author == request.user %}user-note{% else %}coach-note{% endif %} {% if note.is_pinned %}priority-note{% endif %}">
-                      <div class="note-header">
-                        <span>{% if note.is_pinned %}<i class="fas fa-thumbtack me-1"></i>{% endif %}{{ note.author.username }}</span>
-                        <span>{{ note.created_at|date:"M d, H:i" }}</span>
-                      </div>
-                      <div class="note-content">{{ note.content }}</div>
-                      <button class="reply-trigger" onclick="toggleReplyForm({{ note.id }})"><i class="fas fa-reply"></i> Reply</button>
-                    </div>
-
-                    <!-- Replies -->
-                    {% for reply in note.replies.all %}
-                    <div class="reply-bubble {% if reply.author == request.user %}user-reply{% else %}coach-reply{% endif %} ms-5 mt-2">
-                        <small class="fw-bold">{{ reply.author.username }}</small>
-                        <p class="mb-0 small">{{ reply.content }}</p>
-                    </div>
-                    {% endfor %}
-
-                    <!-- Reply Form (Hidden) -->
-                    <div id="reply-form-{{ note.id }}" class="ms-5 mt-2" style="display: none;">
-                        <form action="{% url 'memberships:add_note' membership.id %}" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="parent_id" value="{{ note.id }}">
-                            <div class="input-group input-group-sm">
-                                <input type="text" name="content" class="form-control" placeholder="Write a reply..." required>
-                                <button class="btn btn-primary" type="submit">Send</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                {% endif %}
-              {% endfor %}
-            </div>
-
-            <!-- New Primary Note Form -->
-            <div class="note-input-area mt-4 pt-3 border-top">
-              <form action="{% url 'memberships:add_note' membership.id %}" method="POST">
-                {% csrf_token %}
-                <div class="input-group">
-                  <textarea name="content" class="form-control" placeholder="Send a message to your coach..." required rows="2"></textarea>
-                  <button class="btn btn-primary px-4" type="submit"><i class="fas fa-paper-plane"></i></button>
-                </div>
-              </form>
-            </div>
-
-            <!-- Audit Trail -->
-            <div class="audit-log-section mt-4 pt-3 border-top">
-                <small class="text-muted fw-bold d-block mb-2">PRECISION AUDIT LOG</small>
-                {% for log in membership.audit_trail.all|slice:":3" %}
-                    <div class="audit-item d-flex justify-content-between small opacity-75">
-                        <span>{{ log.action }}: {{ log.old_state.status|default:"N/A" }} → {{ log.new_state.status|default:"N/A" }}</span>
-                        <span class="text-muted">{{ log.timestamp|date:"M d" }}</span>
-                    </div>
-                {% endfor %}
-            </div>
+          <div class="membership-actions">
+            <a href="{% url 'memberships:membership_detail' membership.pk %}" class="action-btn primary">
+              <i class="fas fa-eye"></i>
+              View Details
+            </a>
+            {% comment %} {% if membership.auto_renew %}
+            <button class="action-btn secondary">
+              <i class="fas fa-ban"></i>
+              Cancel Auto-Renew
+            </button>
+            {% else %}
+            <button class="action-btn secondary">
+              <i class="fas fa-redo"></i>
+              Enable Auto-Renew
+            </button>
+            {% endif %} {% endcomment %}
+            {% comment %} <button class="action-btn outline">
+              <i class="fas fa-download"></i>
+              Download Invoice
+            </button> {% endcomment %}
           </div>
         </div>
         {% endfor %}
       </div>
+
+      <!-- Quick Stats -->
+      <div class="membership-stats">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-dumbbell"></i>
+          </div>
+          <div class="stat-content">
+            <h3>Active Plan</h3>
+            <p class="stat-value">{{ memberships.0.plan.name }}</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-content">
+            <h3>Days Remaining</h3>
+            <p class="stat-value">{{ memberships.0.end_date|timeuntil:memberships.0.start_date }}</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-calendar"></i>
+          </div>
+          <div class="stat-content">
+            <h3>Renewal Date</h3>
+            <p class="stat-value">{{ memberships.0.end_date|date:"M d, Y" }}</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-sync"></i>
+          </div>
+          <div class="stat-content">
+            <h3>Auto Renew</h3>
+            <p class="stat-value {% if memberships.0.auto_renew %}renewing{% else %}not-renewing{% endif %}">
+              {{ memberships.0.auto_renew|yesno:"Enabled,Disabled" }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upgrade Section -->
+      <div class="upgrade-section">
+        <div class="upgrade-content">
+          <h2>Ready to Level Up?</h2>
+          <p>Upgrade your membership to unlock premium features and exclusive benefits</p>
+          <div class="upgrade-actions">
+            <a href="{% url 'memberships:plan_list' %}" class="upgrade-btn primary">
+              <i class="fas fa-star"></i>
+              Explore Premium Plans
+            </a>
+            <a href="{% url 'core:contact' %}" class="upgrade-btn secondary">
+              <i class="fas fa-question-circle"></i>
+              Get Upgrade Advice
+            </a>
+          </div>
+        </div>
+      </div>
+
     {% else %}
-      <div class="empty-state">
-        <div class="empty-icon"><i class="fas fa-fingerprint"></i></div>
-        <h2>No Active Protocols</h2>
-        <p>Apply for a bespoke performance tier to start your journey.</p>
-        <a href="{% url 'memberships:plan_list' %}" class="btn btn-primary btn-lg rounded-pill px-5 shadow">Browse Plans</a>
+      <!-- No Memberships State -->
+      <div class="no-memberships">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-dumbbell"></i>
+          </div>
+          <h2>No Active Programs</h2>
+          <p>You don't have any active training programs. Start your fitness transformation today!</p>
+          <div class="empty-actions">
+            <a href="{% url 'memberships:plan_list' %}" class="cta-button primary">
+              <i class="fas fa-search"></i>
+              Browse Coaching Programs
+            </a>
+            <a href="{% url 'core:contact' %}" class="cta-button secondary">
+              <i class="fas fa-question-circle"></i>
+              Need a Consultation?
+            </a>
+          </div>
+        </div>
+
+        <!-- Plan Recommendations -->
+        <div class="plan-recommendations">
+          <h3>Popular Programs</h3>
+          <div class="recommendation-cards">
+            <div class="recommendation-card">
+              <h4>Monthly Coaching</h4>
+              <p class="price">$149 <span>/month</span></p>
+              <ul class="features">
+                <li><i class="fas fa-check"></i> Custom Workout Plan</li>
+                <li><i class="fas fa-check"></i> Nutrition Guidance</li>
+                <li><i class="fas fa-check"></i> Weekly Check-ins</li>
+              </ul>
+              <a href="{% url 'memberships:plan_list' %}" class="recommendation-btn">Learn More</a>
+            </div>
+
+            <div class="recommendation-card featured">
+              <div class="popular-badge">Most Popular</div>
+              <h4>Elite 1-on-1</h4>
+              <p class="price">$399<span>/month</span></p>
+              <ul class="features">
+                <li><i class="fas fa-check"></i> 12 Private Sessions</li>
+                <li><i class="fas fa-check"></i> 24/7 Coach Access</li>
+                <li><i class="fas fa-check"></i> Form Video Reviews</li>
+              </ul>
+              <a href="{% url 'memberships:plan_list' %}" class="recommendation-btn primary">View Plan</a>
+            </div>
+
+            <div class="recommendation-card">
+              <h4>Online Transformation</h4>
+              <p class="price">$299<span>/3 months</span></p>
+              <ul class="features">
+                <li><i class="fas fa-check"></i> Complete Roadmap</li>
+                <li><i class="fas fa-check"></i> Macro Calculations</li>
+                <li><i class="fas fa-check"></i> Community Support</li>
+              </ul>
+              <a href="{% url 'memberships:plan_list' %}" class="recommendation-btn">Learn More</a>
+            </div>
+          </div>
+        </div>
       </div>
     {% endif %}
   </div>
 </section>
 
-<!-- EmailJS Integration for Activation -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script type="text/javascript">
-  (function() {
-    emailjs.init("oGLVwTeSTDVKa9WPR");
-  })();
-
-  function handleExpertActivation(membershipId, planName, duration, startDate) {
-    if (!confirm('Proceed to activation? An email with full details will be sent.')) return;
-
-    // Prepare EmailJS Data
-    const templateParams = {
-      name: "{{ request.user.username }}",
-      trainee_email: "{{ request.user.email }}",
-      time: new Date().toLocaleString(),
-      message: `PROTOCOL ACTIVATED: ${planName}\nDURATION: ${duration} Days\nSTART DATE: ${startDate}\n\nWelcome to your elite performance protocol.`
-    };
-
-    // Send Email via EmailJS
-    emailjs.send("service_lu2mdga", "template_jwcqh99", templateParams)
-      .then(function() {
-        // Redirect to Django view to handle state change
-        window.location.href = `/memberships/activate/${membershipId}/`;
-      }, function(error) {
-        console.error('Email failed, activating anyway...', error);
-        window.location.href = `/memberships/activate/${membershipId}/`;
-      });
-  }
-
-  function toggleReplyForm(id) {
-    const form = document.getElementById(`reply-form-${id}`);
-    form.style.display = form.style.display === 'none' ? 'block' : 'none';
-  }
-</script>
-
 <style>
-  .memberships-section { padding: 4rem 0; background: #f8fafc; min-height: 80vh; }
-  .page-header { text-align: center; margin-bottom: 4rem; }
-  .page-header h1 { font-size: 2.8rem; font-weight: 800; color: #0f172a; }
-  .page-subtitle { color: #64748b; font-size: 1.2rem; }
+  .memberships-section {
+    padding: 3rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    min-height: 80vh;
+  }
 
-  .membership-card { background: white; border-radius: 28px; padding: 2.5rem; margin-bottom: 3rem; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); border: 1px solid #e2e8f0; }
-  .membership-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px dashed #cbd5e1; }
-  
-  .status-badge { padding: 0.6rem 1.4rem; border-radius: 50px; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
-  .status-ACTIVE { background: #dcfce7; color: #166534; }
-  .status-APPROVED { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
-  .status-REQUESTED { background: #fff; border: 1px solid #e2e8f0; color: #64748b; }
-  .status-PAUSED { background: #f1f5f9; color: #475569; }
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
 
-  .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
-  .detail-item { display: flex; align-items: flex-start; gap: 1.2rem; padding: 1.5rem; background: #f8fafc; border-radius: 20px; }
-  .detail-item.highlight { background: #eff6ff; border: 1px solid #dbeafe; }
-  
-  .detail-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: white; background: #64748b; }
-  .detail-icon.schedule { background: #3b82f6; }
+  .page-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 
-  .interaction-section { background: #f8fafc; border-radius: 24px; padding: 2rem; border: 1px solid #e2e8f0; }
-  
-  /* Notes & Replies */
-  .note-bubble { padding: 1.2rem; border-radius: 20px; position: relative; max-width: 85%; }
-  .coach-note { background: white; border: 1px solid #e2e8f0; border-bottom-left-radius: 4px; }
-  .user-note { background: #0f172a; color: white; margin-left: auto; border-bottom-right-radius: 4px; }
-  .priority-note { border-left: 5px solid #3b82f6; }
-  
-  .reply-bubble { background: #f1f5f9; padding: 0.8rem 1rem; border-radius: 15px; max-width: 75%; border-left: 3px solid #cbd5e1; }
-  .coach-reply { background: #ffffff; border-left-color: #3b82f6; }
-  .user-reply { margin-left: auto; background: #1e293b; color: white; }
+  .page-subtitle {
+    font-size: 1.2rem;
+    color: #64748b;
+    max-width: 500px;
+    margin: 0 auto;
+  }
 
-  .reply-trigger { background: none; border: none; color: #3b82f6; font-size: 0.75rem; font-weight: 700; margin-top: 5px; padding: 0; }
+  .membership-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
 
-  .btn-status { display: inline-block; padding: 0.5rem 1rem; border-radius: 10px; font-size: 0.8rem; font-weight: 700; text-decoration: none; margin-right: 0.5rem; transition: 0.2s; }
-  .btn-status.pause { background: #e2e8f0; color: #475569; }
-  .btn-status.resume { background: #dcfce7; color: #166534; }
-  .btn-status.cancel { background: #fee2e2; color: #991b1b; }
-  
-  .empty-state { text-align: center; padding: 5rem; background: white; border-radius: 32px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+  .membership-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+  }
+
+  .plan-info h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .plan-description {
+    color: #64748b;
+    margin: 0;
+  }
+
+  .status-badge {
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+  }
+
+  .status-badge.active {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .status-badge.inactive {
+    background: #fef2f2;
+    color: #dc2626;
+  }
+
+  .membership-details {
+    margin-bottom: 2rem;
+  }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .detail-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 12px;
+  }
+
+  .detail-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+  }
+
+  .detail-content label {
+    display: block;
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-bottom: 0.25rem;
+  }
+
+  .detail-value {
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .detail-value.renewing {
+    color: #166534;
+  }
+
+  .detail-value.not-renewing {
+    color: #dc2626;
+  }
+
+  .days-remaining {
+    color: #3b82f6;
+  }
+
+  .membership-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content:center;
+    align-items:center;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .action-btn.primary {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+  }
+
+  .action-btn.secondary {
+    background: #e2e8f0;
+    color: #475569;
+  }
+
+  .action-btn.outline {
+    background: transparent;
+    color: #3b82f6;
+    border: 2px solid #3b82f6;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .membership-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .stat-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .stat-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+  }
+
+  .stat-content h3 {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  .upgrade-section {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+    padding: 3rem;
+    border-radius: 20px;
+    text-align: center;
+  }
+
+  .upgrade-content h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .upgrade-content p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+  }
+
+  .upgrade-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .upgrade-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .upgrade-btn.primary {
+    background: white;
+    color: #3b82f6;
+  }
+
+  .upgrade-btn.secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+  }
+
+  .upgrade-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  /* No Memberships State */
+  .no-memberships {
+    text-align: center;
+  }
+
+  .empty-state {
+    background: white;
+    padding: 4rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    margin-bottom: 3rem;
+  }
+
+  .empty-icon {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2.5rem;
+    margin: 0 auto 2rem;
+  }
+
+  .empty-state h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state p {
+    font-size: 1.1rem;
+    color: #64748b;
+    margin-bottom: 2rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .empty-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .cta-button.primary {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+  }
+
+  .cta-button.secondary {
+    background: transparent;
+    color: #3b82f6;
+    border: 2px solid #3b82f6;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .plan-recommendations {
+    text-align: center;
+  }
+
+  .plan-recommendations h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 2rem;
+  }
+
+  .recommendation-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+  .recommendation-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .recommendation-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .recommendation-card.featured {
+    border: 2px solid #3b82f6;
+  }
+
+  .popular-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .recommendation-card h4 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #3b82f6;
+    margin-bottom: 1.5rem;
+  }
+
+  .price span {
+    font-size: 1rem;
+    color: #64748b;
+  }
+
+  .features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
+  }
+
+  .features li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: #64748b;
+  }
+
+  .features li i {
+    color: #10b981;
+  }
+
+  .recommendation-btn {
+    display: inline-block;
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    background: #f1f5f9;
+    color: #475569;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .recommendation-btn.primary {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    color: white;
+  }
+
+  .recommendation-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .memberships-section {
+      padding: 2rem 0;
+    }
+    
+    .page-header h1 {
+      font-size: 2rem;
+    }
+    
+    .membership-header {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .membership-actions {
+      flex-direction: column;
+    }
+    
+    .action-btn {
+      justify-content: center;
+    }
+    
+    .detail-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .upgrade-actions,
+    .empty-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .upgrade-btn,
+    .cta-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 </style>
 {% endblock content %}

@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url
 
 load_dotenv()
 
@@ -11,14 +12,16 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure-placeholder-key")
 DEBUG = os.getenv("DJANGO_DEBUG", "True").lower() in {"1", "true", "yes"}
 
 ALLOWED_HOSTS = [host.strip() for host in os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",") if host.strip()]
+# Add support for CSRF trusted origins in production
+CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in os.getenv("DJANGO_CSRF_TRUSTED_HOSTS", "").split(",") if host.strip()]
 
 INSTALLED_APPS = [
-    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "whitenoise.runserver_nostatic",  # WhiteNoise
     "django.contrib.staticfiles",
     "core",
     "accounts",
@@ -28,6 +31,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # WhiteNoise
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -58,11 +62,13 @@ TEMPLATES = [
 WSGI_APPLICATION = "gymfit_project.wsgi.application"
 ASGI_APPLICATION = "gymfit_project.asgi.application"
 
+# Database configuration: Use DATABASE_URL for production, fallback to SQLite
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -94,10 +100,6 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-JAZZMIN_SETTINGS ={
-    "site_title": "tutorial",
-    
-}
 
 LOGIN_REDIRECT_URL = "core:home"
 LOGOUT_REDIRECT_URL = "core:home"
@@ -106,5 +108,13 @@ LOGIN_URL = "accounts:login"
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "")
 STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY", "")
 
-SITE_NAME = os.getenv("SITE_NAME", "JafriFit")
-SITE_TAGLINE = os.getenv("SITE_TAGLINE", "Fuel Your Energy. Elevate Your Strength.")
+SITE_NAME = os.getenv("SITE_NAME", "Coach Jafri PT")
+SITE_TAGLINE = os.getenv("SITE_TAGLINE", "Personalized Training. Proven Results. Your Journey Starts Here.")
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}

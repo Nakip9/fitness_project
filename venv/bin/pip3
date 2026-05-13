@@ -1,4 +1,6 @@
-#!/home/eissa/Desktop/fitness_edited_31-10/venv/bin/python3
+#!/bin/sh
+'''exec' "/home/eissa/Desktop/fitness_edited_31-10 (Copy)/venv/bin/python3" "$0" "$@"
+' '''
 # -*- coding: utf-8 -*-
 import re
 import sys

@@ -1,104 +1,230 @@
-from django.db import models
-from django.conf import settings
-from django.utils import timezone
-from django.core.exceptions import ValidationError
+from datetime import timedelta
 
-class TrainingPlan(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    price_cents = models.PositiveIntegerField(help_text="Price in cents (e.g., 5000 for $50.00)")
-    duration_days = models.PositiveIntegerField()
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.db import models
+from django.utils import timezone
+
+
+class MembershipPlan(models.Model):
+    BILLING_CYCLE_CHOICES = [
+        ("monthly", "Monthly"),
+        ("quarterly", "Quarterly"),
+        ("yearly", "Yearly"),
+    ]
+
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True)
+    description = models.TextField(blank=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    duration_days = models.PositiveIntegerField(default=30)
+    billing_cycle = models.CharField(
+        max_length=20, choices=BILLING_CYCLE_CHOICES, default="monthly"
+    )
+    is_active = models.BooleanField(default=True)
     featured = models.BooleanField(default=False)
 
-    @property
-    def price_display(self):
-        return f"{self.price_cents / 100:.2f}"
+    class Meta:
+        ordering = ["price"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
+    @property
+    def duration(self) -> timedelta:
+        return timedelta(days=self.duration_days)
+
+
+class MembershipBenefit(models.Model):
+    plan = models.ForeignKey(
+        MembershipPlan, related_name="benefits", on_delete=models.CASCADE
+    )
+    text = models.CharField(max_length=255)
+    highlight = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return f"{self.text} ({self.plan})"
+
+
 class Membership(models.Model):
-    class Status(models.TextChoices):
-        REQUESTED = 'REQUESTED', 'Pending Review'
-        APPROVED = 'APPROVED', 'Approved (Pending Payment)'
-        ACTIVE = 'ACTIVE', 'Active Coaching'
-        PAUSED = 'PAUSED', 'Paused'
-        POSTPONED = 'POSTPONED', 'Postponed'
-        CANCELLED = 'CANCELLED', 'Cancelled'
-        COMPLETED = 'COMPLETED', 'Completed'
+    STATUS_CHOICES = [
+        ("pending", "Pending"),
+        ("active", "Active"),
+        ("expired", "Expired"),
+        ("canceled", "Canceled"),
+        ("postponed", "Postponed"),
+    ]
 
-    class PaymentStatus(models.TextChoices):
-        UNPAID = 'UNPAID', 'Unpaid'
-        PAID = 'PAID', 'Paid'
-        REFUNDED = 'REFUNDED', 'Refunded'
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    plan = models.ForeignKey(MembershipPlan, on_delete=models.PROTECT)
+    start_date = models.DateTimeField(default=timezone.now)
+    end_date = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
+    auto_renew = models.BooleanField(default=True)
 
-    trainee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='training_requests')
-    coach = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='trainee_roster')
-    plan = models.ForeignKey(TrainingPlan, on_delete=models.PROTECT)
-    
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.REQUESTED)
-    payment_status = models.CharField(max_length=20, choices=PaymentStatus.choices, default=PaymentStatus.UNPAID)
-    
-    # Scheduling fields (Using discrete fields for compatibility while maintaining logic)
-    scheduled_start = models.DateTimeField(null=True, blank=True)
-    scheduled_end = models.DateTimeField(null=True, blank=True)
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    # Scheduling fields
+    scheduled_time = models.DateTimeField(
+        blank=True,
+        null=True,
+        help_text="The daily session start time (date portion is ignored; only time matters).",
+    )
+    duration_minutes = models.PositiveIntegerField(
+        default=60,
+        help_text="Session length in minutes.",
+    )
+    coach_notes = models.TextField(
+        blank=True,
+        help_text="Permanent instructions from the coach — always visible to the trainee.",
+    )
+
+    # Postpone support: stores remaining days at the moment of postponement
+    postponed_remaining_days = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        help_text="Days remaining when the membership was postponed. Used to restore the countdown on re-activation.",
+    )
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ["-start_date"]
+        unique_together = ("user", "plan", "start_date")
+
+    def __str__(self) -> str:
+        return f"{self.user} — {self.plan} [{self.get_status_display()}]"
+
+    # ------------------------------------------------------------------
+    # Computed properties
+    # ------------------------------------------------------------------
 
     @property
-    def days_remaining(self):
-        """Requirement: Real-time countdown for the trainee."""
-        if self.status != self.Status.ACTIVE or not self.scheduled_end:
-            return 0
-        
-        now = timezone.now()
-        if now > self.scheduled_end:
-            return 0
-            
-        delta = self.scheduled_end - now
-        # Add 1 to include today
-        return delta.days + 1
+    def scheduled_end_time(self):
+        """Return the session end datetime (start + duration_minutes)."""
+        if self.scheduled_time:
+            return self.scheduled_time + timedelta(minutes=self.duration_minutes)
+        return None
 
-    def __str__(self):
-        return f"{self.trainee.username} - {self.plan.name} ({self.get_status_display()})"
+    @property
+    def time_slot(self) -> str:
+        """Human-readable session window, e.g. '03:00 PM – 04:00 PM'."""
+        if self.scheduled_time:
+            end = self.scheduled_end_time
+            return (
+                f"{self.scheduled_time.strftime('%I:%M %p')} – "
+                f"{end.strftime('%I:%M %p')}"
+            )
+        return "Not Scheduled"
+
+    @property
+    def is_active(self) -> bool:
+        if self.status != "active":
+            return False
+        return self.end_date is not None and self.end_date >= timezone.now()
+
+    @property
+    def days_left(self) -> int:
+        """
+        Live days remaining.
+        - Active: calculated from end_date.
+        - Postponed: returns the frozen value stored at postponement time.
+        - Anything else: 0.
+        """
+        if self.status == "postponed" and self.postponed_remaining_days is not None:
+            return self.postponed_remaining_days
+        if self.status == "active" and self.end_date:
+            delta = self.end_date - timezone.now()
+            return max(0, delta.days)
+        return 0
+
+    # ------------------------------------------------------------------
+    # Lifecycle helpers
+    # ------------------------------------------------------------------
+
+    def cancel(self):
+        """
+        Cancel the membership.  Freezes the countdown by clearing end_date
+        so no further time elapses against the subscription.
+        """
+        self.status = "canceled"
+        # Preserve end_date for audit purposes but mark as canceled.
+        # The is_active property already gates on status, so the countdown
+        # is effectively stopped.
+        self.save(update_fields=["status"])
+
+    def postpone(self):
+        """
+        Postpone the membership.
+        - Freezes the remaining days counter.
+        - Clears scheduled_time so the session window is hidden from the client
+          until the coach assigns a new time.
+        """
+        if self.status not in ("active", "pending"):
+            raise ValidationError("Only active or pending memberships can be postponed.")
+        self.postponed_remaining_days = self.days_left
+        self.scheduled_time = None  # Hide session window until re-scheduled
+        self.status = "postponed"
+        self.save(update_fields=["status", "postponed_remaining_days", "scheduled_time"])
+
+    # ------------------------------------------------------------------
+    # Validation
+    # ------------------------------------------------------------------
 
     def clean(self):
-        """Requirement 1: Conflict Prevention Logic."""
-        if self.status in [self.Status.APPROVED, self.Status.ACTIVE] and self.coach and self.scheduled_start and self.scheduled_end:
-            # Check for overlaps
-            overlaps = Membership.objects.filter(
-                coach=self.coach,
-                status__in=[self.Status.APPROVED, self.Status.ACTIVE],
-                scheduled_start__lt=self.scheduled_end,
-                scheduled_end__gt=self.scheduled_start
-            ).exclude(pk=self.pk)
-            
-            if overlaps.exists():
-                other = overlaps.first()
+        """
+        Hard conflict prevention: no two *active* memberships may share an
+        overlapping session window.
+
+        The check is intentionally limited to Active memberships so that
+        Pending / Postponed / Canceled records do not block scheduling.
+        """
+        if not self.scheduled_time:
+            return  # Nothing to validate without a scheduled time
+
+        my_start = self.scheduled_time
+        my_end = self.scheduled_end_time  # always set when scheduled_time is set
+
+        # Only check against Active memberships (excluding self on edit)
+        conflicting_qs = Membership.objects.filter(
+            status="active",
+            scheduled_time__isnull=False,
+        ).exclude(pk=self.pk)
+
+        for other in conflicting_qs:
+            other_start = other.scheduled_time
+            other_end = other.scheduled_end_time
+
+            if other_end is None:
+                continue
+
+            # Overlap condition: two intervals [A,B) and [C,D) overlap when A < D and C < B
+            if my_start < other_end and other_start < my_end:
                 raise ValidationError(
-                    f"Schedule Conflict: Coach {self.coach.get_full_name()} is already booked with {other.trainee.get_full_name()} "
-                    f"from {other.scheduled_start.strftime('%H:%M')} to {other.scheduled_end.strftime('%H:%M')}."
+                    f"Schedule conflict: This time slot ({my_start.strftime('%I:%M %p')} – "
+                    f"{my_end.strftime('%I:%M %p')}) overlaps with "
+                    f"trainee '{other.user.get_full_name() or other.user.username}' "
+                    f"(#{other.pk}) whose session runs "
+                    f"{other_start.strftime('%I:%M %p')} – {other_end.strftime('%I:%M %p')}."
                 )
 
+    # ------------------------------------------------------------------
+    # Save
+    # ------------------------------------------------------------------
+
+    def save(self, *args, **kwargs):
+        # Auto-calculate end_date on first save
+        if not self.end_date and self.plan_id:
+            self.end_date = self.start_date + self.plan.duration
+        super().save(*args, **kwargs)
+
+
 class MembershipNote(models.Model):
-    membership = models.ForeignKey(Membership, on_delete=models.CASCADE, related_name='comms_hub')
+    membership = models.ForeignKey(
+        Membership, on_delete=models.CASCADE, related_name="notes"
+    )
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content = models.TextField()
-    is_pinned = models.BooleanField(default=False)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-is_pinned', 'created_at']
+        ordering = ["created_at"]
 
-class AuditLog(models.Model):
-    membership = models.ForeignKey(Membership, on_delete=models.CASCADE, related_name='audit_trail')
-    actor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    action = models.CharField(max_length=255)
-    old_state = models.JSONField(null=True)
-    new_state = models.JSONField(null=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f"Note by {self.author} on {self.membership}"
